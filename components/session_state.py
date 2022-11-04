@@ -22,7 +22,7 @@ def init_app():
     if 'signed_in' not in st.session_state:
         st.session_state['query_params'] = get_query_params()
         st.session_state['access_token'] = ''
-        st.session_state['signed_in'] = authentication.check_sign_in(st.session_state['query_params'])
+        st.session_state['signed_in'] = False#authentication.check_sign_in(st.session_state['query_params'])
         st.session_state['data_meta'] = view_data.load_data_meta()
         st.session_state['method_meta'] = view_method.load_method_meta()
         st.session_state['data_loaded'] = False

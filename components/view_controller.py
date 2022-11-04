@@ -7,14 +7,19 @@ from . import authentication
 
 def init_login_view():
     view_sidebar.draw_signin_sidebar()
-    st.title('Please sign in to use indiciny for free!')
+    st.title('Please enter developer password')
 
-    google_button = st.button('Sign in with Google')
+    pw = st.text_input("Password:", type="password")
+
+    login_button = st.button('Sign in')
+    if login_button:
+        if pw == st.secrets.dev.pw:
+            st.session_state.signed_in = True
     #facebook_button = st.button('Sign in with Facebook')
     #linkedin_button = st.button('Sign in with LinkedIn')
 
-    if google_button:
-        authentication.sign_in('google')
+    #if google_button:
+    #    authentication.sign_in('google')
     #elif facebook_button:
     #    authentication.sign_in('facebook')
     #elif linkedin_button:
