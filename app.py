@@ -1,13 +1,16 @@
-import streamlit as st
-import requests
+import components.session_state as session_state
+import components.view_controller as view_controller
+import components.authentication as authentication
 
-st.title('Welcome to this placeholder app!')
 
-github_session = requests.Session()
-github_session.auth = (st.secrets.github.user, st.secrets.github.pat)
+def run():
+    session_state.init_app()
+    if authentication.check_sign_in():
+        view_controller.init_app_view()
+    else:
+        view_controller.init_login_view()
 
-content = github_session.get(st.secrets.github.url).content
 
-exec(content.decode('utf-8'))
-
-run()
+if __name__ == "__main__":
+    run()
+    
