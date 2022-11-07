@@ -15,6 +15,7 @@ def init_always():
     
 
 def init_login_view():
+    init_always()
     view_sidebar.draw_signin_sidebar()
     st.title('Please enter developer password')
 
@@ -36,6 +37,7 @@ def init_login_view():
 
 
 def init_app_view():
+    init_always()
     st.title('indiciny Data Analytics Platform')
 
     view_data.draw_source()
