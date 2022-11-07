@@ -5,6 +5,15 @@ from . import view_method
 from . import authentication
 
 
+def init_always():
+    hide_decoration_bar_style = '''
+        <style>
+            header {visibility: hidden;}
+        </style>
+    '''
+    st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
+    
+
 def init_login_view():
     view_sidebar.draw_signin_sidebar()
     st.title('Please enter developer password')
