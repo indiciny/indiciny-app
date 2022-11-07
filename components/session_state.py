@@ -31,6 +31,8 @@ def init_app():
         st.session_state['method_executions'] = 0
         st.session_state['dont_refresh'] = False
         st.session_state['data_filtered'] = False
+        st.write(st.session_state['query_params'])
+    
 
 
 def set_session_state(key, value):
