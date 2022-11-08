@@ -5,7 +5,7 @@ import mysql.connector
 import time
 
 
-@st.cache
+@st.cache(ttl=600)
 def get_private_file(filename):
     github_session = requests.Session()
     github_session.auth = (st.secrets.github.user, st.secrets.github.pat)
@@ -14,7 +14,7 @@ def get_private_file(filename):
     return content
 
 
-@st.cache
+@st.cache(ttl=600)
 def get_public_csv(filename):
     file = st.secrets.github.publicurl + filename
     df = pd.read_csv(file)
