@@ -46,6 +46,7 @@ def draw_method():
                             session_state.set_session_state('method_executed', True)
                             session_state.set_session_state('method', method)
                             session_state.increase_method_counter(1)
+                            data_handler.log_transaction('method', st.session_state.selected_method_meta['name'])
 
 
 def draw_method_view():

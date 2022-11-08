@@ -22,9 +22,9 @@ def draw_sidebar():
         st.write("Welcome *" + session_state.get_session_state('user_id') + "*!")
         st.markdown("# Data analysis")
         st.write("It's easy: select a data source and an analysis method to perform on it.")
-        #if session_state.get_session_state('data_loaded'):
-            #st.write('---')
-            #draw_data_filter()
+        if session_state.get_session_state('data_loaded'):
+            st.write('---')
+            draw_data_filter()
 
 
 def draw_counter():
@@ -62,10 +62,12 @@ def draw_data_filter():
             if reset_filters:
                 update_data_filter('')
                 st.session_state.data_filtered = False
+                st.session_state.data_filter_select = []
                 st.experimental_rerun()
 
         filters = st.multiselect("Select data filters", st.session_state.original_data.columns,
-                                   label_visibility="collapsed")
+                                 label_visibility="collapsed",
+                                 key='data_filter_select')
 
         categorical = st.session_state.original_data.select_dtypes(include=['category', object]).columns
         dfdict = {}

@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 import mysql.connector
+import time
 
 
 @st.cache
@@ -32,9 +33,21 @@ def connect_wp_db():
     return mysql.connector.connect(**st.secrets["wpmysql"])
 
 
+def connect_transaction_db():
+    return mysql.connector.connect(**st.secrets["tradb"])
+
 #@st.experimental_memo(ttl=600)
 def run_db_query(query):
     dbc = connect_wp_db()
     with dbc.cursor() as cursor:
         cursor.execute(query)
         return cursor.fetchall()
+
+
+def log_transaction(type, action):
+    dbc = connect_transaction_db()
+    sql = "INSERT INTO indiciny_transactions (user_id, timestamp, transaction_type, transaction_object) VALUES (%s, %s, %s, %s);"
+    values = (st.session_state.user_id, round(time.time()), type, action)
+    cursor = dbc.cursor()
+    cursor.execute(sql, values)
+    dbc.commit()

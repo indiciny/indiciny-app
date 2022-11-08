@@ -43,6 +43,7 @@ def draw_source():
                         session_state.set_session_state('data', data)
                         session_state.set_session_state('original_data', data)
                         session_state.increase_data_counter(1)
+                        data_handler.log_transaction('data', st.session_state.selected_data_meta['name'])
     else:
         session_state.set_session_state('data_loaded', False)
 
