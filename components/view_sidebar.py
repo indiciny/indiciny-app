@@ -19,7 +19,7 @@ def draw_signin_sidebar():
 
 def draw_sidebar():
     with st.sidebar:
-        st.write("Welcome *" + session_state.get_session_state('user_email') + "*!")
+        st.write("Welcome *" + session_state.get_session_state('user_id') + "*!")
         st.markdown("# Data analysis")
         st.write("It's easy: select a data source and an analysis method to perform on it.")
         #if session_state.get_session_state('data_loaded'):
