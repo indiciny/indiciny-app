@@ -24,7 +24,7 @@ def check_user_session():
     else:
         st.write("Visit https://indiciny.com")
     #except:
-        st.write("Visit https://indiciny.com")
+        #st.write("Visit https://indiciny.com")
 
 
 def init_app_view():
