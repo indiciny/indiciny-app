@@ -3,7 +3,7 @@ import components.view_controller as view_controller
 import streamlit as st
 
 
-developing = st.secrets.dev['is_developing']
+developing = False
 
 
 def run():
