@@ -7,7 +7,7 @@ developing = False
 
 def run():
     session_state.init_app()
-    #view_controller.check_user_session()
+    view_controller.check_user_session()
     #if session_state.get_session_state('query_params')['embedded'][0] or developing:
     #    view_controller.init_app_view()
     #else:
