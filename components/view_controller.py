@@ -13,7 +13,7 @@ def check_user_session():
     login_query = "SELECT `user_otac`,`valid_until` FROM `indiciny_otac` WHERE `user_id`='" + user_id + "';"
     query_result = data_handler.run_db_query(login_query)
     otac_time = query_result[0][1] > time.time()
-    otac_check = query_result[0][0] = param_otac
+    otac_check = (query_result[0][0] == param_otac)
     if otac_time and otac_check:
         session_state.set_session_state('user_id', user_id)
         init_app_view()
