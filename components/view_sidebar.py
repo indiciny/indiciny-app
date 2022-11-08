@@ -37,7 +37,6 @@ def draw_counter():
 
 def update_data_filter(filters):
     filtered_data = st.session_state.original_data
-    st.sidebar.write(filters)
     for data_filter in filters:
         d_filter = filters[data_filter]
         dtype = d_filter['type']
