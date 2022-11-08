@@ -8,19 +8,22 @@ import time
 
 
 def check_user_session():
-    if session_state.get_session_state('query_params')['embedded'][0]:
-        user_id = session_state.get_session_state('query_params')['userlogin'][0]
-        param_otac = session_state.get_session_state('query_params')['otac'][0]
-        login_query = "SELECT `user_otac`,`valid_until` FROM `indiciny_otac` WHERE `user_id`='" + user_id + "';"
-        query_result = data_handler.run_db_query(login_query)
-        otac_time = query_result[0][1] > time.time()
-        otac_check = (query_result[0][0] == param_otac)
-        if otac_time and otac_check:
-            session_state.set_session_state('user_id', user_id)
-            init_app_view()
+    try:
+        if session_state.get_session_state('query_params')['embedded'][0]:
+            user_id = session_state.get_session_state('query_params')['userlogin'][0]
+            param_otac = session_state.get_session_state('query_params')['otac'][0]
+            login_query = "SELECT `user_otac`,`valid_until` FROM `indiciny_otac` WHERE `user_id`='" + user_id + "';"
+            query_result = data_handler.run_db_query(login_query)
+            otac_time = query_result[0][1] > time.time()
+            otac_check = (query_result[0][0] == param_otac)
+            if otac_time and otac_check:
+                session_state.set_session_state('user_id', user_id)
+                init_app_view()
+            else:
+                st.write("Visit https://indiciny.com")
         else:
             st.write("Visit https://indiciny.com")
-    else:
+    except:
         st.write("Visit https://indiciny.com")
 
 
