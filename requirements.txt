@@ -1,2 +1,2 @@
-httpx_oauth
+mysql-connector-python
 plotly

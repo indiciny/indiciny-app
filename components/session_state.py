@@ -1,5 +1,4 @@
 import streamlit as st
-from . import  authentication
 from . import view_data
 from . import view_method
 
@@ -18,11 +17,18 @@ def init_app():
         }
     )
 
+    hide_decoration_bar_style = '''
+            <style>
+                header {visibility: hidden;}
+            </style>
+        '''
+    st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
+
     # Initialize session state variables
     if 'signed_in' not in st.session_state:
         st.session_state['query_params'] = get_query_params()
         st.session_state['access_token'] = ''
-        st.session_state['signed_in'] = False#authentication.check_sign_in(st.session_state['query_params'])
+        st.session_state['signed_in'] = False #authentication.check_sign_in(st.session_state['query_params'])
         st.session_state['data_meta'] = view_data.load_data_meta()
         st.session_state['method_meta'] = view_method.load_method_meta()
         st.session_state['data_loaded'] = False
@@ -33,7 +39,6 @@ def init_app():
         st.session_state['data_filtered'] = False
         st.write(st.session_state['query_params'])
     
-
 
 def set_session_state(key, value):
     st.session_state[key] = value

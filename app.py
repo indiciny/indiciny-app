@@ -7,10 +7,11 @@ developing = False
 
 def run():
     session_state.init_app()
-    if session_state.get_session_state('signed_in') or developing:
-        view_controller.init_app_view()
-    else:
-        view_controller.init_login_view()
+    view_controller.check_user_session()
+    #if session_state.get_session_state('query_params')['embedded'][0] or developing:
+    #    view_controller.init_app_view()
+    #else:
+    #    view_controller.init_login_view()
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
+import mysql.connector
 
 
 @st.cache
@@ -24,3 +25,16 @@ def run_private_code(filename):
     content = get_private_file(filename)
     code = compile(content, "<string>", "exec")
     return code
+
+
+#@st.experimental_singleton
+def connect_wp_db():
+    return mysql.connector.connect(**st.secrets["wpmysql"])
+
+
+#@st.experimental_memo(ttl=600)
+def run_db_query(query):
+    dbc = connect_wp_db()
+    with dbc.cursor() as cursor:
+        cursor.execute(query)
+        return cursor.fetchall()
