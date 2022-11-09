@@ -28,7 +28,7 @@ def run_private_code(filename):
     return code
 
 
-#@st.experimental_singleton
+@st.experimental_singleton
 def connect_wp_db():
     return mysql.connector.connect(**st.secrets["wpmysql"])
 
