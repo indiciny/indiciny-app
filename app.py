@@ -59,7 +59,7 @@ def init_app():
                     query_result = cursor.fetchall()
 
                 otac_time = query_result[0][1] > time.time()
-                otac_check = (query_result[0][0] == param_otac)
+                otac_check = (query_result[0][0] == st.session_state.otac)
                 if otac_time and otac_check:
                     st.session_state.authorized = True
 
