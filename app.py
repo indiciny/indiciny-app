@@ -44,9 +44,11 @@ def init_app():
     )
     hide_header()
     if 'authorized' not in st.session_state:
+        st.session_state.authorized = False
         st.session_state.query_params = st.experimental_get_query_params()
         if 'embedded' in st.session_state.query_params:
-            if st.session_state.query_params['userlogin'] and st.session_state.query_params['otac']:
+            if 'userlogin' and 'otac' in st.session_state.query_params:
+            #if st.session_state.query_params['userlogin'] and st.session_state.query_params['otac']:
                 st.session_state.userlogin = st.session_state.query_params['userlogin'][0]
                 login = st.session_state.userlogin
                 st.session_state.otac = st.session_state.query_params['otac'][0]
