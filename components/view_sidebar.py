@@ -4,19 +4,6 @@ from pandas.api.types import is_numeric_dtype
 import re
 
 
-def draw_signin_sidebar():
-    with st.sidebar:
-        st.markdown("# Welcome to indiciny _beta_")
-        st.markdown("### Data privacy")
-        st.write("""
-        We do not sell your data. We provide access to publicly available data.
-        We only track your actions for improving our service for you. We also love feedback:
-        """)
-        st.write('_feedback_option_')
-        with st.expander('Terms and conditions'):
-            st.write('lorem ipsum')
-
-
 def draw_sidebar():
     with st.sidebar:
         st.write("Welcome *" + st.session_state.userlogin + "*! [(sign out)](https://indiciny.com/wp-login.php?action=logout)")

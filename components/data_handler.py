@@ -5,7 +5,7 @@ import mysql.connector
 import time
 
 
-@st.cache(ttl=600)
+@st.experimental_memo
 def get_private_file(filename):
     github_session = requests.Session()
     github_session.auth = (st.secrets.github.user, st.secrets.github.pat)
@@ -14,7 +14,7 @@ def get_private_file(filename):
     return content
 
 
-@st.cache(ttl=600)
+@st.experimental_memo
 def get_public_csv(filename):
     file = st.secrets.github.publicurl + filename
     df = pd.read_csv(file)
@@ -33,6 +33,7 @@ def connect_wp_db():
     return mysql.connector.connect(**st.secrets["wpmysql"])
 
 
+@st.experimental_singleton
 def connect_transaction_db():
     return mysql.connector.connect(**st.secrets["tradb"])
 
