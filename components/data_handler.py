@@ -48,7 +48,7 @@ def run_db_query(query):
 def log_transaction(type, action):
     dbc = connect_transaction_db()
     sql = "INSERT INTO indiciny_transactions (user_id, timestamp, transaction_type, transaction_object) VALUES (%s, %s, %s, %s)"
-    values = (st.session_state.user_id, round(time.time()), type, action)
+    values = (st.session_state.userlogin, round(time.time()), type, action)
     cursor = dbc.cursor()
     cursor.execute(sql, values)
     dbc.commit()
