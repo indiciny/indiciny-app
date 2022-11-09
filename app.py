@@ -1,6 +1,8 @@
 import components.session_state as session_state
 import components.view_controller as view_controller
 import streamlit as st
+import mysql.connector
+import time
 
 
 def run():
@@ -43,7 +45,7 @@ def init_app():
     hide_header()
     if 'authorized' not in st.session_state:
         st.session_state.query_params = st.experimental_get_query_params()
-        if st.session_state.query_params['embedded']:
+        if st.session_state.query_params['embedded'] != '':
             if st.session_state.query_params['userlogin'] and st.session_state.query_params['otac']:
                 st.session_state.userlogin = st.session_state.query_params['userlogin'][0]
                 login = st.session_state.userlogin
