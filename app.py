@@ -1,6 +1,7 @@
-import components.session_state as session_state
-import components.view_controller as view_controller
 import streamlit as st
+import components.session_state as session_state
+import components.view_data as view_data
+import components.view_method as view_method
 import mysql.connector
 import time
 
@@ -9,9 +10,11 @@ def run():
     init_app()
 
 
-def set_counters():
+def initiate_states():
+    st.session_state['data_meta'] = view_data.load_data_meta()
     st.session_state['data_loaded'] = False
     st.session_state['data_loads'] = 0
+    st.session_state['method_meta'] = view_method.load_method_meta()
     st.session_state['method_executed'] = False
     st.session_state['method_executions'] = 0
 
@@ -61,11 +64,17 @@ def init_app():
                 otac_time = query_result[0][1] > time.time()
                 otac_check = (query_result[0][0] == st.session_state.otac)
                 if otac_time and otac_check:
+                    initiate_states()
                     st.session_state.authorized = True
 
     if st.session_state.authorized:
-        set_counters()
-        view_controller.init_app_view()
+        view_data.draw_source()
+        view_data.draw_source_view()
+        st.write('___')
+        view_method.draw_method()
+        view_method.draw_method_view()
+        view_sidebar.draw_sidebar()
+        view_sidebar.draw_counter()
     else:
         st.write("Visit https://indiciny.com")
 
