@@ -43,23 +43,17 @@ def init_app():
     hide_header()
     if 'authorized' not in st.session_state:
         st.session_state.query_params = st.experimental_get_query_params()
-        st.write(st.session_state.query_params)
-        st.write(st.session_state.query_params.keys())
         if st.session_state.query_params['embedded']:
             if st.session_state.query_params['userlogin'] and st.session_state.query_params['otac']:
                 st.session_state.userlogin = st.session_state.query_params['userlogin'][0]
                 login = st.session_state.userlogin
                 st.session_state.otac = st.session_state.query_params['otac'][0]
-                conn = data_handler.connect_wp_db()
-
-                @st.experimental_memo(ttl=600)
-                def run_db_query(query):
-                    with conn.cursor() as cursor:
-                        cursor.execute(query)
-                        return cursor.fetchall()
-
+                conn = mysql.connector.connect(**st.secrets["wpmysql"]) #data_handler.connect_wp_db()
                 login_query = "SELECT `user_otac`,`valid_until` FROM `indiciny_otac` WHERE `user_id`='" + login + "';"
-                query_result = run_db_query(login_query)
+                with conn.cursor() as cursor:
+                    cursor.execute(login_query)
+                    query_result = cursor.fetchall()
+
                 otac_time = query_result[0][1] > time.time()
                 otac_check = (query_result[0][0] == param_otac)
                 if otac_time and otac_check:
