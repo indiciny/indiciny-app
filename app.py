@@ -2,6 +2,7 @@ import streamlit as st
 import components.session_state as session_state
 import components.view_data as view_data
 import components.view_method as view_method
+import components.view_sidebar as view_sidebar
 import mysql.connector
 import time
 
