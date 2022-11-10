@@ -33,7 +33,7 @@ def connect_wp_db():
     return mysql.connector.connect(**st.secrets["wpmysql"])
 
 
-@st.experimental_singleton
+#@st.experimental_singleton
 def connect_transaction_db():
     return mysql.connector.connect(**st.secrets["tradb"])
 
