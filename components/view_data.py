@@ -56,6 +56,8 @@ def draw_source():
                 if st.session_state.execute_code:
                     st.write(st.session_state.data_code)
                     exec(st.session_state.data_code)
+                    if 'what' in st.session_state:
+                        st.write(st.session_state.what)
                     #st.sidebar.write(df)
 
 
