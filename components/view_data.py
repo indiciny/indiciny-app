@@ -58,7 +58,7 @@ def draw_source():
 
 
 def draw_source_view():
-    if returned_data in st.session_state:
+    if 'returned_data' in st.session_state:
         session_state.set_session_state('data_loaded', True)
         session_state.set_session_state('data', st.session_state.returned_data)
     if st.session_state.data_loaded:
