@@ -27,6 +27,7 @@ def load_data(meta):
     elif meta['data_type'] == 'code':
         data = data_handler.run_private_code(meta['data_location'])
         exec(data)
+            
         # return data
 
 
@@ -57,6 +58,9 @@ def draw_source():
 
 
 def draw_source_view():
+    if returned_data in st.session_state:
+        session_state.set_session_state('data_loaded', True)
+        session_state.set_session_state('data', st.session_state.returned_data)
     if st.session_state.data_loaded:
         session_state.set_session_state('source_expanded', False)
         sv_container = st.container()
