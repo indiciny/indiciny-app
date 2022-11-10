@@ -25,8 +25,10 @@ def load_data(meta):
         data_handler.log_transaction('data', st.session_state.selected_data_meta['name'])
         #return data
     elif meta['data_type'] == 'code':
-        data = data_handler.run_private_code(meta['data_location'])
-        exec(data)
+        st.session_state.data_code = data_handler.run_private_code(meta['data_location'])
+        st.session_state.execute_code = True
+        #data = data_handler.run_private_code(meta['data_location'])
+        #exec(data)
             
         # return data
 
@@ -51,6 +53,8 @@ def draw_source():
                     with st.spinner('Loading data...'):
                         #data = \
                         load_data(st.session_state.selected_data_meta)
+                if st.session_state.execute_code:
+                    exec(st.session_state.data_code)
 
 
     else:
