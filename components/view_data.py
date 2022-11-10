@@ -54,6 +54,7 @@ def draw_source():
                         #data = \
                         load_data(st.session_state.selected_data_meta)
                 if st.session_state.execute_code:
+                    st.write(st.session_state.data_code)
                     exec(st.session_state.data_code)
                     st.sidebar.write(df)
 
