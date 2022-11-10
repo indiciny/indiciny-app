@@ -46,7 +46,7 @@ def run_db_query(query):
 
 
 def log_transaction(type, action):
-    dbc = connect_transaction_db()
+    dbc = mysql.connector.connect(**st.secrets["tradb"]) #connect_transaction_db()
     sql = "INSERT INTO indiciny_transactions (user_id, timestamp, transaction_type, transaction_object) VALUES (%s, %s, %s, %s)"
     values = (st.session_state.userlogin, round(time.time()), type, action)
     cursor = dbc.cursor()
