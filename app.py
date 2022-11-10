@@ -15,6 +15,7 @@ def initiate_states():
     st.session_state['data_meta'] = view_data.load_data_meta()
     st.session_state['data_loaded'] = False
     st.session_state['data_loads'] = 0
+    st.session_state['data_filtered'] = False
     st.session_state['method_meta'] = view_method.load_method_meta()
     st.session_state['method_executed'] = False
     st.session_state['method_executions'] = 0
