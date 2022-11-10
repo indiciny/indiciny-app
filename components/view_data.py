@@ -56,6 +56,9 @@ def draw_source():
                 if st.session_state.execute_code:
                     exec(st.session_state.data_code)
 
+                btn_check_code = st.button('check')
+                if btn_check_code:
+                    st.write(st.session_state.from_code)
 
     else:
         session_state.set_session_state('data_loaded', False)
