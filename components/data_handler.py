@@ -5,7 +5,7 @@ import mysql.connector
 import time
 
 
-@st.experimental_memo
+#@st.experimental_memo
 def get_private_file(filename):
     github_session = requests.Session()
     github_session.auth = (st.secrets.github.user, st.secrets.github.pat)
