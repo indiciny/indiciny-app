@@ -54,12 +54,7 @@ def draw_source():
                         #data = \
                         load_data(st.session_state.selected_data_meta)
                 if st.session_state.execute_code:
-                    st.write(st.session_state.data_code)
                     exec(st.session_state.data_code)
-                    if 'what' in st.session_state:
-                        st.write(st.session_state.what)
-                    #st.sidebar.write(df)
-
 
 
     else:
@@ -68,8 +63,9 @@ def draw_source():
 
 def draw_source_view():
     if 'returned_data' in st.session_state:
-        session_state.set_session_state('data_loaded', True)
-        session_state.set_session_state('data', st.session_state.returned_data)
+        if st.session_state.returned_data is not None:
+            session_state.set_session_state('data_loaded', True)
+            session_state.set_session_state('data', st.session_state.returned_data)
     if st.session_state.data_loaded:
         session_state.set_session_state('source_expanded', False)
         sv_container = st.container()
