@@ -37,7 +37,7 @@ def update_persistent_state(key, value):
 
 def reset_persistent_state():
     st.session_state.persistent_state = {
-        "data_selection": "",
+        "data_selection": st.session_state.data_meta[0],
         "data_params": "",
         "data_original": "",
         "data_current": "",
