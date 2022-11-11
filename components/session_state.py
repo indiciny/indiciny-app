@@ -42,7 +42,7 @@ def reset_persistent_state():
         "method_params": "",
         "method_code": ""
     }
-    for key, value in st.session_state.persistent_state:
+    for key, value in st.session_state.persistent_state.items():
         st.session_state[key] = value
 
 
@@ -56,7 +56,7 @@ def load_persistent_state():
     file = open(state_name, "r")
     content = file.read()
     st.session_state.persistent_state = dict(json.loads(content))
-    for key, value in st.session_state.persistent_state:
+    for key, value in st.session_state.persistent_state.items():
         st.session_state[key] = value
 
 
