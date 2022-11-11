@@ -37,10 +37,12 @@ def update_persistent_state(key, value):
 
 def reset_persistent_state():
     st.session_state.persistent_state = {
-        "data_selection": "-",  #st.session_state.data_meta[0],
-        "data_params": "",
-        "data_original": "",
-        "data_current": "",
+        "data_selection": "-",
+        "data_selection_expanded": True,
+        "data_params": {},
+        "data_code": "",
+        "data_code_ran": False,
+        "data_retrieved": False,
         "method_selection": "-",
         "method_params": "",
         "method_code": ""
@@ -70,9 +72,11 @@ def load_persistent_state():
 def save_persistent_state():
     st.session_state.persistent_state = {
         "data_selection": st.session_state.data_selection,
+        "data_selection_expanded": st.session_state.data_selection_expanded,
         "data_params": st.session_state.data_params,
-        "data_original": st.session_state.data_original,
-        "data_current": st.session_state.data_current,
+        "data_code": st.session_state.data_code,
+        "data_code_ran": st.session_state.data_code_ran,
+        "data_retrieved": st.session_state.data_retrieved,
         "method_selection": st.session_state.method_selection,
         "method_params": st.session_state.method_params,
         "method_code": st.session_state.method_code
