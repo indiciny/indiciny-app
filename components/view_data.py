@@ -67,7 +67,7 @@ def draw_source_view():
     if 'returned_data' not in st.session_state and st.session_state.data_code_ran:
         data_handler.run_private_code(st.session_state.data_code)
     if 'returned_data' in st.session_state:
-        if st.session_state.returned_data is not None and st.session_state.set_data:
+        if st.session_state.returned_data is not None: #and st.session_state.set_data:
             #st.session_state.set_data = False
             session_state.set_session_state('data_loaded', True)
             session_state.set_session_state('data', st.session_state.returned_data)
