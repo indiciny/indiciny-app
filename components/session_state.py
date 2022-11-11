@@ -54,11 +54,15 @@ def load_persistent_state():
     state_name = "state_" + st.session_state.userlogin + ".json"
     with open(state_name, "wb") as file:
         with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
-            ftp.retrbinary(f"RETR {state_name}", file.write)
-
-    file = open(state_name, "r")
-    content = file.read()
-    st.session_state.persistent_state = dict(json.loads(content))
+            if state_name in ftp.nlst():
+                ftp.retrbinary(f"RETR {state_name}", file.write)
+                found_state = True
+            else:
+                found_state = False
+    if found_state:
+        file = open(state_name, "r")
+        content = file.read()
+        st.session_state.persistent_state = dict(json.loads(content))
     for key, value in st.session_state.persistent_state.items():
         st.session_state[key] = value
 
