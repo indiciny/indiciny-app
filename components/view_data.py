@@ -80,4 +80,4 @@ def draw_source_view():
         sv_container = st.container()
         with sv_container:
             st.dataframe(st.session_state.data)
-            st.download_button('Download data', st.session_state.data.to_csv(index=False), file_name=st.session_state.data_name + ".csv")
+            st.download_button('Download data', st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")
