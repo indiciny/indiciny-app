@@ -37,7 +37,7 @@ def load_data(meta):
 def draw_source():
     st.write("### Data selection")
     meta = st.session_state.data_meta
-    data_source = st.selectbox('src', meta, label_visibility="collapsed", key="data_selection")
+    data_source = st.selectbox('src', meta, label_visibility="collapsed") #, key="data_selection")
     if data_source != '-':
         session_state.set_new_session_state('source_expanded', True)
         source_expander = st.expander("Details / Load", expanded=st.session_state.source_expanded)
