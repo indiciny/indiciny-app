@@ -25,7 +25,9 @@ def run_private_code(filename):
     filename = "code/" + filename
     content = get_private_file(filename)
     code = compile(content, "<string>", "exec")
-    return code
+    exec(code)
+    #return code
+
 
 
 @st.experimental_singleton

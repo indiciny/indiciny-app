@@ -16,7 +16,9 @@ def load_data_meta():
 #@st.cache(ttl=ttl_value)
 def load_data(meta):
     st.session_state.data_name = st.session_state.selected_data_meta['name']
-    st.session_state.data_code = data_handler.run_private_code(meta['data_location'])
+    st.session_state.data_code = meta['data_location']
+    data_handler.run_private_code(st.session_state.data_code)
+    st.session_state.data_code_ran = True
 
 
     #if meta['data_type'] == 'csv':
@@ -56,9 +58,8 @@ def draw_source():
                 if btn_load_data:
                     with st.spinner('Loading data...'):
                         load_data(st.session_state.selected_data_meta)
-                if st.session_state.execute_code:
-                    exec(st.session_state.data_code)
-                    st.session_state.data_code_ran = True
+
+
 
     else:
         session_state.set_session_state('data_loaded', False)
@@ -66,7 +67,7 @@ def draw_source():
 
 def draw_source_view():
     if 'returned_data' not in st.session_state and st.session_state.data_code_ran:
-        exec(st.session_state.data_code)
+        data_handler.run_private_code(st.session_state.data_code)
     if 'returned_data' in st.session_state:
         if st.session_state.returned_data is not None and st.session_state.set_data:
             #st.session_state.set_data = False
