@@ -14,9 +14,11 @@ def load_method_meta():
 
 
 def load_method(meta):
-    if meta['data_type'] == 'code':
-        method = data_handler.run_private_code(meta['data_location'])
-        return method
+    st.session_state.method_name = st.session_state.selected_method_meta['name']
+    st.session_state.method_code = "methods/" + meta['data_location']
+    data_handler.run_private_code(st.session_state.method_code)
+    st.session_state.method_code_ran = True
+
 
 
 def filter_methods(category):

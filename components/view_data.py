@@ -72,7 +72,7 @@ def draw_source_view():
             session_state.set_session_state('data_loaded', True)
             session_state.set_session_state('data', st.session_state.returned_data)
             session_state.set_session_state('original_data', st.session_state.returned_data)
-            session_state.increase_data_counter(1)
+            #session_state.increase_data_counter(1)
             #data_handler.log_transaction('data', st.session_state.selected_data_meta['name'])
 
     if st.session_state.data_loaded:
