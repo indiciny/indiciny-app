@@ -22,6 +22,7 @@ def initiate_states():
     st.session_state['method_executions'] = 0
 
 
+
 def hide_header():
     hide_decoration_bar_style = '''
                 <style>
@@ -29,11 +30,6 @@ def hide_header():
                 </style>
             '''
     st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
-
-
-@st.experimental_singleton
-def connect_wp_db():
-    return mysql.connector.connect(**st.secrets["wpmysql"])
 
 
 def init_app():
@@ -54,7 +50,6 @@ def init_app():
         st.session_state.query_params = st.experimental_get_query_params()
         if 'embedded' in st.session_state.query_params:
             if 'userlogin' and 'otac' in st.session_state.query_params:
-            #if st.session_state.query_params['userlogin'] and st.session_state.query_params['otac']:
                 st.session_state.userlogin = st.session_state.query_params['userlogin'][0]
                 login = st.session_state.userlogin
                 st.session_state.otac = st.session_state.query_params['otac'][0]
@@ -68,6 +63,7 @@ def init_app():
                 otac_check = (query_result[0][0] == st.session_state.otac)
                 if otac_time and otac_check:
                     initiate_states()
+                    session_state.load_persistent_state()
                     st.session_state.authorized = True
 
     if st.session_state.authorized:
@@ -79,9 +75,11 @@ def init_app():
         view_sidebar.draw_sidebar()
         view_sidebar.draw_counter()
         view_sstate()
+        btn_savestate = st.button('Save State')
+        if btn_savestate:
+            session_state.save_persistent_state()
     else:
         st.write("Visit https://indiciny.com")
-
 
 
 def view_sstate():

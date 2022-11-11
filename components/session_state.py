@@ -25,3 +25,46 @@ def increase_data_counter(increment):
 
 def increase_method_counter(increment):
     st.session_state.method_executions = st.session_state.method_executions + increment
+
+
+def update_persistent_state(key, value):
+    st.session_state[key] = value
+    st.session_state.persistent_state[key] = value
+
+
+def reset_persistent_state():
+    st.session_state.persistent_state = {
+        "data_selection": "",
+        "data_params": "",
+        "data_original": "",
+        "data_current": "",
+        "method_selection": "",
+        "method_params": "",
+        "method_code": ""
+    }
+    for key, value in st.session_state.persistent_state:
+        st.session_state[key] = value
+
+
+def load_persistent_state():
+    reset_persistent_state()
+    state_name = "state_" + st.session_state.user_id + ".json"
+    with open(state_name, "wb") as file:
+        with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
+            ftp.retrbinary(f"RETR {state_name}", file.write)
+
+    file = open(state_name, "r")
+    content = file.read()
+    st.session_state.persistent_state = dict(json.loads(content))
+    for key, value in st.session_state.persistent_state:
+        st.session_state[key] = value
+
+
+def save_persistent_state():
+    state = json.dumps(st.session_state.persistent_state)
+    bio = io.BytesIO()
+    bio.write(state.encode())
+    bio.seek(0)
+    state_name = "state_" + st.session_state.user_id + ".json"
+    with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
+        ftp.storbinary(f'STOR {state_name}', bio)
