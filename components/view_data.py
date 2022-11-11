@@ -59,8 +59,6 @@ def draw_source():
                     with st.spinner('Loading data...'):
                         load_data(st.session_state.selected_data_meta)
 
-
-
     else:
         session_state.set_session_state('data_loaded', False)
 
