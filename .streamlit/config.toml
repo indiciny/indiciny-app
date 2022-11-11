@@ -4,7 +4,7 @@
 # base =
 
 # Primary accent color for interactive elements.
-primaryColor = "#66FCF1"
+primaryColor = "#4ABDB4" #"#66FCF1"
 
 # Background color for the main content area.
 backgroundColor = "#0B0C10"
