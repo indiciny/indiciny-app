@@ -16,7 +16,7 @@ def load_data_meta():
 #@st.cache(ttl=ttl_value)
 def load_data(meta):
     st.session_state.data_name = st.session_state.selected_data_meta['name']
-    st.session_state.data_code = meta['data_location']
+    st.session_state.data_code = "data/" + meta['data_location']
     data_handler.run_private_code(st.session_state.data_code)
     st.session_state.data_code_ran = True
 
