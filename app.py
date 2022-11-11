@@ -85,7 +85,7 @@ def init_app():
 
 
 def view_sstate():
-    with st.sidebar():
+    with st.sidebar:
         with st.expander("Details / Load"):
             st.session_state
 
