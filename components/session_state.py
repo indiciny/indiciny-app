@@ -68,6 +68,15 @@ def load_persistent_state():
 
 
 def save_persistent_state():
+    st.session_state.persistent_state = {
+        "data_selection": st.session_state.data_selection,
+        "data_params": st.session_state.data_params,
+        "data_original": st.session_state.data_original,
+        "data_current": st.session_state.data_current,
+        "method_selection": st.session_state.method_selection,
+        "method_params": st.session_state.method_params,
+        "method_code": st.session_state.method_code
+    }
     state = json.dumps(st.session_state.persistent_state)
     bio = io.BytesIO()
     bio.write(state.encode())
