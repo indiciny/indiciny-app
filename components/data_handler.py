@@ -21,12 +21,12 @@ def get_public_csv(filename):
     return df
 
 
+@st.experimental_memo
 def run_private_code(filename):
     filename = "code/" + filename
     content = get_private_file(filename)
     code = compile(content, "<string>", "exec")
     exec(code)
-    #return code
 
 
 
