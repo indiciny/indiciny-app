@@ -78,8 +78,16 @@ def init_app():
         view_method.draw_method_view()
         view_sidebar.draw_sidebar()
         view_sidebar.draw_counter()
+        view_sstate()
     else:
         st.write("Visit https://indiciny.com")
+
+
+
+def view_sstate():
+    with st.sidebar():
+        with st.expander("Details / Load"):
+            st.session_state
 
 
 if __name__ == "__main__":
