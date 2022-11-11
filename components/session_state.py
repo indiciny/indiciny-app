@@ -48,7 +48,7 @@ def reset_persistent_state():
 
 def load_persistent_state():
     reset_persistent_state()
-    state_name = "state_" + st.session_state.user_id + ".json"
+    state_name = "state_" + st.session_state.userlogin + ".json"
     with open(state_name, "wb") as file:
         with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
             ftp.retrbinary(f"RETR {state_name}", file.write)
@@ -65,6 +65,6 @@ def save_persistent_state():
     bio = io.BytesIO()
     bio.write(state.encode())
     bio.seek(0)
-    state_name = "state_" + st.session_state.user_id + ".json"
+    state_name = "state_" + st.session_state.userlogin + ".json"
     with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
         ftp.storbinary(f'STOR {state_name}', bio)
