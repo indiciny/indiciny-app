@@ -42,8 +42,10 @@ def load_data(meta):
 def draw_source():
     st.write("### Data selection")
     meta = st.session_state.data_meta
-    data_source = st.selectbox('src', meta, label_visibility="collapsed", key="data_selection")
+    data_source = st.selectbox('src', meta, label_visibility="collapsed", key="data_selection") #, on_change=session_state.reset_after_data_selection())
     if data_source != '-':
+        if st.session_state.persistent_state["data_selection"] != data_source:
+            session_state.reset_after_data_selection()
         session_state.set_new_session_state('data_selection_expanded', True)
         source_expander = st.expander("Details / Load", expanded=st.session_state.data_selection_expanded)
         if source_expander.expanded:
@@ -60,24 +62,25 @@ def draw_source():
                         load_data(st.session_state.selected_data_meta)
 
     else:
-        session_state.set_session_state('data_loaded', False)
+        session_state.reset_after_data_selection()
+        #session_state.set_session_state('data_loaded', False)
 
 
 def draw_source_view():
     if 'returned_data' not in st.session_state and st.session_state.data_code_ran:
         data_handler.run_private_code(st.session_state.data_code)
-    if 'returned_data' in st.session_state:
+    if 'returned_data' in st.session_state and st.session_state.data_code_ran:
         if st.session_state.returned_data is not None: #and st.session_state.set_data:
             #st.session_state.set_data = False
-            session_state.set_session_state('data_loaded', True)
+            #session_state.set_session_state('data_loaded', True)
             session_state.set_session_state('data', st.session_state.returned_data)
             session_state.set_session_state('original_data', st.session_state.returned_data)
             #session_state.increase_data_counter(1)
             #data_handler.log_transaction('data', st.session_state.selected_data_meta['name'])
 
-    if st.session_state.data_loaded:
-        session_state.set_session_state('data_selection_expanded', False)
-        sv_container = st.container()
-        with sv_container:
-            st.dataframe(st.session_state.data)
-            st.download_button('Download data', st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")
+    #if st.session_state.data_loaded:
+            session_state.set_session_state('data_selection_expanded', False)
+            sv_container = st.container()
+            with sv_container:
+                st.dataframe(st.session_state.data)
+                st.download_button('Download data', st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")

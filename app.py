@@ -64,6 +64,7 @@ def init_app():
                     session_state.load_persistent_state()
                     st.session_state.authorized = True
 
+
     if st.session_state.authorized:
         view_sidebar.draw_sidebar()
         view_data.draw_source()
@@ -78,7 +79,8 @@ def init_app():
             view_session_state()
         #btn_savestate = st.button('Save State')
         #if btn_savestate:
-        session_state.save_persistent_state()
+        #st.write(st.session_state.persistent_state)
+        session_state.save_persistent_state(False)
     else:
         st.write("Visit https://indiciny.com/app")
 
