@@ -17,6 +17,7 @@ def load_method(meta):
     st.session_state.method_name = st.session_state.selected_method_meta['name']
     st.session_state.method_code = "methods/" + meta['data_location']
     #data_handler.run_private_code(st.session_state.method_code, {"data": st.session_state.data})
+    session_state.set_session_state('method_selection_expanded', False)
     st.session_state.method_code_ran = True
 
 
@@ -56,7 +57,7 @@ def draw_method_view():
         #data = {"data": st.session_state.data}
         #params = {**data, **st.session_state.method_params}
         data_handler.run_private_code(st.session_state.method_code)
-        session_state.set_session_state('method_selection_expanded', False)
+
     #if 'returned_method' in st.session_state:
         #if st.session_state.returned_method is not None: #and st.session_state.set_data:
             #st.session_state.set_data = False
