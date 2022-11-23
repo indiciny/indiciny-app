@@ -22,7 +22,7 @@ def get_public_csv(filename):
 
 
 #@st.experimental_memo
-def run_private_code(filename, code_params):
+def run_private_code(filename):
     filename = "code/" + filename
     content = get_private_file(filename)
     code = compile(content, "<string>", "exec")
