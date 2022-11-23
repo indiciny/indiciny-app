@@ -7,19 +7,17 @@ import mysql.connector
 import time
 
 
-def run():
-    init_app()
-
-
 def initiate_states():
     st.session_state['data_meta'] = view_data.load_data_meta()
     st.session_state['data_loaded'] = False
     st.session_state['data_loads'] = 0
+    st.session_state['data_code_ran'] = False
     st.session_state['data_filtered'] = False
     st.session_state['execute_code'] = False
     st.session_state['method_meta'] = view_method.load_method_meta()
     st.session_state['method_executed'] = False
     st.session_state['method_executions'] = 0
+    st.session_state['method_code_ran'] = False
 
 
 
@@ -67,26 +65,29 @@ def init_app():
                     st.session_state.authorized = True
 
     if st.session_state.authorized:
+        view_sidebar.draw_sidebar()
         view_data.draw_source()
         view_data.draw_source_view()
         st.write('___')
         view_method.draw_method()
         view_method.draw_method_view()
-        view_sidebar.draw_sidebar()
+        if session_state.get_session_state('data_loaded'):
+            view_sidebar.draw_data_filter()
         view_sidebar.draw_counter()
-        view_sstate()
-        btn_savestate = st.button('Save State')
-        if btn_savestate:
-            session_state.save_persistent_state()
+        if st.session_state.userlogin == st.secrets.developer:
+            view_session_state()
+        #btn_savestate = st.button('Save State')
+        #if btn_savestate:
+        session_state.save_persistent_state()
     else:
-        st.write("Visit https://indiciny.com")
+        st.write("Visit https://indiciny.com/app")
 
 
-def view_sstate():
+def view_session_state():
     with st.sidebar:
         with st.expander("Details / Load"):
             st.session_state
 
 
 if __name__ == "__main__":
-    run()
+    init_app()

@@ -9,9 +9,6 @@ def draw_sidebar():
         st.write("Welcome *" + st.session_state.userlogin + "*! [(sign out)](https://indiciny.com/wp-login.php?action=logout)")
         st.markdown("# Data analysis")
         st.write("It's easy: select a data source and an analysis method to perform on it.")
-        if session_state.get_session_state('data_loaded'):
-            st.write('---')
-            draw_data_filter()
 
 
 def draw_counter():
@@ -41,6 +38,7 @@ def update_data_filter(filters):
 
 def draw_data_filter():
     with st.sidebar:
+        st.write('---')
         col1, col2 = st.columns(2)
         col1.write("Select data filters")
         if st.session_state.data_filtered:

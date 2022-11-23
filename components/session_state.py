@@ -42,10 +42,11 @@ def reset_persistent_state():
         "data_params": {},
         "data_code": "",
         "data_code_ran": False,
-        "data_retrieved": False,
         "method_selection": "-",
-        "method_params": "",
-        "method_code": ""
+        "method_selection_expanded": True,
+        "method_params": {},
+        "method_code": "",
+        "method_code_ran": False,
     }
     for key, value in st.session_state.persistent_state.items():
         st.session_state[key] = value
@@ -76,10 +77,11 @@ def save_persistent_state():
         "data_params": st.session_state.data_params,
         "data_code": st.session_state.data_code,
         "data_code_ran": st.session_state.data_code_ran,
-        "data_retrieved": st.session_state.data_retrieved,
         "method_selection": st.session_state.method_selection,
+        "method_selection_expanded": st.session_state.method_selection_expanded,
         "method_params": st.session_state.method_params,
-        "method_code": st.session_state.method_code
+        "method_code": st.session_state.method_code,
+        "method_code_ran": st.session_state.method_code_ran
     }
     state = json.dumps(st.session_state.persistent_state)
     bio = io.BytesIO()
