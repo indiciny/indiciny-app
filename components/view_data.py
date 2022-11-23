@@ -17,7 +17,7 @@ def load_data_meta():
 def load_data(meta):
     st.session_state.data_name = st.session_state.selected_data_meta['name']
     st.session_state.data_code = "data/" + meta['data_location']
-    data_handler.run_private_code(st.session_state.data_code, st.session_state.data_params)
+    data_handler.run_private_code(st.session_state.data_code)
     st.session_state.data_code_ran = True
 
 
@@ -65,7 +65,7 @@ def draw_source():
 
 def draw_source_view():
     if 'returned_data' not in st.session_state and st.session_state.data_code_ran:
-        data_handler.run_private_code(st.session_state.data_code, st.session_state.data_params)
+        data_handler.run_private_code(st.session_state.data_code)
     if 'returned_data' in st.session_state:
         if st.session_state.returned_data is not None: #and st.session_state.set_data:
             #st.session_state.set_data = False
