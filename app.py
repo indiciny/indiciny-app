@@ -74,7 +74,7 @@ def init_app():
         view_method.draw_method_view()
         if session_state.get_session_state('data_loaded'):
             view_sidebar.draw_data_filter()
-        view_sidebar.draw_counter()
+        #view_sidebar.draw_counter()
         if st.session_state.userlogin == st.secrets.developer:
             view_session_state()
         #btn_savestate = st.button('Save State')

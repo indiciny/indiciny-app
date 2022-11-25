@@ -142,6 +142,6 @@ def save_persistent_state(force):
         state_name = "state_" + st.session_state.userlogin + ".json"
         with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
             ftp.storbinary(f'STOR {state_name}', bio)
-        st.sidebar.write('uploaded')
-    else:
-        st.sidebar.write('unchanged')
+        #st.sidebar.write('uploaded')
+    #else:
+        #st.sidebar.write('unchanged')
