@@ -120,7 +120,7 @@ def save_persistent_state(force):
     #previous_state = st.session_state.persistent_state.copy()
     #previous_state = copy.deepcopy(st.session_state.persistent_state)
     previous_state = json.loads(json.dumps(st.session_state.persistent_state))
-    #st.write(st.session_state.method_params)
+    st.sidebar.write(previous_state)
     st.session_state.persistent_state = {
         "data_selection": st.session_state.data_selection,
         "data_selection_expanded": st.session_state.data_selection_expanded,
@@ -133,7 +133,7 @@ def save_persistent_state(force):
         "method_code": st.session_state.method_code,
         "method_code_ran": st.session_state.method_code_ran
     }
-
+    st.sidebar.write(st.session_state.persistent_state)
     if st.session_state.persistent_state != previous_state or force:
         state = json.dumps(st.session_state.persistent_state)
         bio = io.BytesIO()
@@ -142,6 +142,7 @@ def save_persistent_state(force):
         state_name = "state_" + st.session_state.userlogin + ".json"
         with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
             ftp.storbinary(f'STOR {state_name}', bio)
+        st.experimental_rerun()
         #st.sidebar.write('uploaded')
     #else:
         #st.sidebar.write('unchanged')

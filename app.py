@@ -66,6 +66,7 @@ def init_app():
 
 
     if st.session_state.authorized:
+
         view_sidebar.draw_sidebar()
         view_data.draw_source()
         view_data.draw_source_view()
