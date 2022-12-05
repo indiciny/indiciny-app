@@ -18,6 +18,7 @@ def initiate_states():
     st.session_state['method_executed'] = False
     st.session_state['method_executions'] = 0
     st.session_state['method_code_ran'] = False
+    st.session_state['returned_data'] = None
 
 
 
@@ -64,10 +65,10 @@ def init_app():
                     session_state.load_persistent_state()
                     st.session_state.authorized = True
 
-
     if st.session_state.authorized:
 
         view_sidebar.draw_sidebar()
+
         view_data.draw_source()
         view_data.draw_source_view()
         st.write('___')
@@ -76,18 +77,20 @@ def init_app():
         if session_state.get_session_state('data_loaded'):
             view_sidebar.draw_data_filter()
         #view_sidebar.draw_counter()
-        if st.session_state.userlogin == st.secrets.developer:
-            view_session_state()
+
         #btn_savestate = st.button('Save State')
         #if btn_savestate:
         #st.write(st.session_state.persistent_state)
         session_state.save_persistent_state(False)
+        if st.session_state.userlogin == st.secrets.developer:
+            view_session_state()
     else:
         st.write("Visit https://indiciny.com/app")
 
 
 def view_session_state():
     with st.sidebar:
+        st.session_state.persistent_state
         with st.expander("Details / Load"):
             st.session_state
 

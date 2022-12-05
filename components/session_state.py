@@ -39,7 +39,7 @@ def increase_method_counter(increment):
 def reset_states():
     st.session_state.returned_data = None
     st.session_state.data = None
-    st.session_state.data = None
+    #st.session_state.data = None
 
 
 
@@ -61,6 +61,7 @@ def reset_persistent_state():
 
 
 def reset_after_data_selection():
+    reset_states()
     st.session_state.persistent_state = {
         "data_selection": st.session_state.data_selection,
         "data_selection_expanded": True,
@@ -120,7 +121,7 @@ def save_persistent_state(force):
     #previous_state = st.session_state.persistent_state.copy()
     #previous_state = copy.deepcopy(st.session_state.persistent_state)
     previous_state = json.loads(json.dumps(st.session_state.persistent_state))
-    st.sidebar.write(previous_state)
+    #st.sidebar.write(previous_state)
     st.session_state.persistent_state = {
         "data_selection": st.session_state.data_selection,
         "data_selection_expanded": st.session_state.data_selection_expanded,

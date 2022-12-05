@@ -17,7 +17,8 @@ def load_data_meta():
 def load_data(meta):
     st.session_state.data_name = st.session_state.selected_data_meta['name']
     st.session_state.data_code = "data/" + meta['data_location']
-    data_handler.run_private_code(st.session_state.data_code)
+    #data_handler.run_private_code(st.session_state.data_code)
+    session_state.set_session_state('data_selection_expanded', False)
     st.session_state.data_code_ran = True
 
 
@@ -57,7 +58,7 @@ def draw_source():
                 st.write("Categories: " + ', '.join(st.session_state.selected_data_meta['categories']))
 
                 btn_load_data = st.button('Load data')
-                if btn_load_data:
+                if btn_load_data:# or st.session_state.data_code_ran:
                     with st.spinner('Loading data...'):
                         load_data(st.session_state.selected_data_meta)
 
@@ -67,20 +68,27 @@ def draw_source():
 
 
 def draw_source_view():
-    if 'returned_data' not in st.session_state and st.session_state.data_code_ran:
+    if st.session_state.data_code_ran:
+        #if 'returned_data' not in st.session_state:
+        #    data_handler.run_private_code(st.session_state.data_code)
+        #if st.session_state.returned_data is None:
+        prerunparams = st.session_state.data_params.copy()
         data_handler.run_private_code(st.session_state.data_code)
-    if 'returned_data' in st.session_state and st.session_state.data_code_ran:
-        if st.session_state.returned_data is not None: #and st.session_state.set_data:
+        if prerunparams != st.session_state.data_params:
+            session_state.save_persistent_state(True)
+        if st.session_state.returned_data is not None:
+        #if 'returned_data' in st.session_state:
+            #if st.session_state.returned_data is not None: #and st.session_state.set_data:
             #st.session_state.set_data = False
             #session_state.set_session_state('data_loaded', True)
             session_state.set_session_state('data', st.session_state.returned_data)
             session_state.set_session_state('original_data', st.session_state.returned_data)
             #session_state.increase_data_counter(1)
             #data_handler.log_transaction('data', st.session_state.selected_data_meta['name'])
-
     #if st.session_state.data_loaded:
             session_state.set_session_state('data_selection_expanded', False)
             sv_container = st.container()
             with sv_container:
                 st.dataframe(st.session_state.data)
-                st.download_button('Download data', st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")
+                #st.session_state.data
+                #st.download_button('Download data', st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")
