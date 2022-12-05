@@ -133,7 +133,6 @@ def save_persistent_state(force):
         "method_code": st.session_state.method_code,
         "method_code_ran": st.session_state.method_code_ran
     }
-    st.sidebar.write(st.session_state.persistent_state)
     if st.session_state.persistent_state != previous_state or force:
         state = json.dumps(st.session_state.persistent_state)
         bio = io.BytesIO()
