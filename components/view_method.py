@@ -60,10 +60,11 @@ def draw_method_view():
     if st.session_state.method_code_ran:
         #data = {"data": st.session_state.data}
         #params = {**data, **st.session_state.method_params}
-        prerunparams = st.session_state.method_params.copy()
+        #prerunparams = st.session_state.method_params.copy()
         data_handler.run_private_code(st.session_state.method_code)
-        if prerunparams != st.session_state.method_params:
-            session_state.save_persistent_state(True)
+        #if prerunparams != st.session_state.method_params:
+            #st.write('here')
+            #session_state.save_persistent_state(True)
 
 
     #if 'returned_method' in st.session_state:

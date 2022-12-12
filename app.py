@@ -1,6 +1,7 @@
 import streamlit as st
 import components.session_state as session_state
 import components.view_data as view_data
+import components.view_preprocessing as view_preprocessing
 import components.view_method as view_method
 import components.view_sidebar as view_sidebar
 import mysql.connector
@@ -8,6 +9,7 @@ import time
 
 
 def initiate_states():
+    #st.session_state['data'] = ''
     st.session_state['data_meta'] = view_data.load_data_meta()
     st.session_state['data_loaded'] = False
     st.session_state['data_loads'] = 0
@@ -64,6 +66,7 @@ def init_app():
                     initiate_states()
                     session_state.load_persistent_state()
                     st.session_state.authorized = True
+
 
     if st.session_state.authorized:
 

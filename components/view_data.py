@@ -2,6 +2,7 @@ import streamlit as st
 import json
 from . import data_handler
 from . import session_state
+from . import view_preprocessing
 
 
 ttl_value = 600
@@ -73,7 +74,14 @@ def draw_source_view():
         #    data_handler.run_private_code(st.session_state.data_code)
         #if st.session_state.returned_data is None:
         prerunparams = st.session_state.data_params.copy()
+        check_data_change = False
+        if st.session_state.returned_data is not None:
+            prerundata = st.session_state.returned_data.copy()
+            check_data_change = True
         data_handler.run_private_code(st.session_state.data_code)
+        if check_data_change:
+            if not prerundata.equals(st.session_state.returned_data):
+                st.session_state.method_selection = "-"
         if prerunparams != st.session_state.data_params:
             session_state.save_persistent_state(True)
         if st.session_state.returned_data is not None:
@@ -87,8 +95,10 @@ def draw_source_view():
             #data_handler.log_transaction('data', st.session_state.selected_data_meta['name'])
     #if st.session_state.data_loaded:
             session_state.set_session_state('data_selection_expanded', False)
+            view_preprocessing.draw_preprocessing()
             sv_container = st.container()
             with sv_container:
                 st.dataframe(st.session_state.data)
                 #st.session_state.data
                 #st.download_button('Download data', st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")
+

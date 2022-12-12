@@ -6,6 +6,7 @@ from ftplib import FTP
 import json
 import io
 import copy
+import os
 
 
 def set_session_state(key, value):
@@ -50,6 +51,8 @@ def reset_persistent_state():
         "data_params": {},
         "data_code": "",
         "data_code_ran": False,
+        "preprocessing_expanded": False,
+        "preprocessing_params": {},
         "method_selection": "-",
         "method_selection_expanded": True,
         "method_params": {},
@@ -68,6 +71,8 @@ def reset_after_data_selection():
         "data_params": {},
         "data_code": "",
         "data_code_ran": False,
+        "preprocessing_expanded": False,
+        "preprocessing_params": {},
         "method_selection": "-",
         "method_selection_expanded": True,
         "method_params": {},
@@ -86,6 +91,8 @@ def reset_after_method_selection():
         "data_params": st.session_state.data_params,
         "data_code": st.session_state.data_code,
         "data_code_ran": st.session_state.data_code_ran,
+        "preprocessing_expanded": st.session_state.preprocessing_expanded,
+        "preprocessing_params": st.session_state.preprocessing_params,
         "method_selection": st.session_state.persistent_state['method_selection'],
         "method_selection_expanded": True,
         "method_params": st.session_state.persistent_state['method_params'],
@@ -113,6 +120,7 @@ def load_persistent_state():
         file = open(state_name, "r")
         content = file.read()
         st.session_state.persistent_state = dict(json.loads(content))
+        os.remove(state_name)
     for key, value in st.session_state.persistent_state.items():
         st.session_state[key] = value
 
@@ -128,6 +136,8 @@ def save_persistent_state(force):
         "data_params": st.session_state.data_params,
         "data_code": st.session_state.data_code,
         "data_code_ran": st.session_state.data_code_ran,
+        "preprocessing_expanded": st.session_state.preprocessing_expanded,
+        "preprocessing_params": st.session_state.preprocessing_params,
         "method_selection": st.session_state.method_selection,
         "method_selection_expanded": st.session_state.method_selection_expanded,
         "method_params": st.session_state.method_params,
