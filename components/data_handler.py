@@ -52,6 +52,7 @@ def get_cached_item(params):
             df = pd.read_csv(f_name)
             os.remove(f_name)
             #st.write(df)
+            st.write(df)
             return df
     else:
         return None
