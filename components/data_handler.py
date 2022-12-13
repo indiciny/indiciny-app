@@ -51,7 +51,6 @@ def get_cached_item(params):
             #st.sidebar.success('cache hit: ' + f_name)
             df = pd.read_csv(f_name)
             os.remove(f_name)
-            #st.write(df)
             return df
     else:
         return None
@@ -109,6 +108,8 @@ def get_public_csv(filename):
 
 #@st.experimental_memo
 def run_private_code(filename):
+    #def get_cached_item(params):
+    #    st.write('hello')
     filename = "code/" + filename
     content = get_private_file(filename)
     code = compile(content, "<string>", "exec")
