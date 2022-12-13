@@ -84,9 +84,7 @@ def column_filters():
         cf_values = []
     else:
         cf_values = list(st.session_state.preprocessing_params[group].keys())
-        #st.write(cf_values)
-        cf_values = set(cf_values).intersection(st.session_state.data.columns)
-
+        cf_values = list(set(cf_values).intersection(st.session_state.data.columns))
 
     filters = st.multiselect("Select data filters", st.session_state.data.columns,
                              label_visibility="collapsed",
@@ -116,7 +114,9 @@ def column_filters():
                             cfil = column_filter[dfilter]['filter']
                             columns_filtered = True
                         else:
-                            cfil = st.session_state.data[dfilter].nunique(dropna=True)
+                            cfil = st.session_state.data[dfilter].unique() #(dropna=True)
+
+                        #st.write(cfil)
                         catfilters = st.multiselect("Select categories",
                                                     st.session_state.data[dfilter].unique(),
                                                     default=cfil)
@@ -161,7 +161,7 @@ def column_filters():
             # st.session_state.data_filtered = True
             # st.write(dfdict)
             st.session_state.preprocessing_params[group] = dfdictnew
-        update_data_filter(dfdict)
+        update_data_filter(st.session_state.preprocessing_params[group])
             #st.write(dfdict)
             #st.session_state.preprocessing_params[group] = {}
 
