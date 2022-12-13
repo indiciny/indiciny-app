@@ -50,7 +50,10 @@ def get_cached_item(params):
         if found_file:
             #st.sidebar.success('cache hit: ' + f_name)
             df = pd.read_csv(f_name)
-            os.remove(f_name)
+            try:
+                os.remove(f_name)
+            except:
+                pass
             return df
     else:
         return None
