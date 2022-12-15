@@ -76,6 +76,28 @@ def recommendations():
         else:
             set_preprocessing_param(group, name, False)
 
+
+def column_selection():
+    st.write('Select columns:')
+    group = 'column_selection'
+    if group not in st.session_state.preprocessing_params:
+        st.session_state.preprocessing_params[group] = list(st.session_state.data.columns)
+        columns = list(st.session_state.data.columns)
+    else:
+        columns = st.session_state.preprocessing_params[group]
+        columns = list(set(columns).intersection(st.session_state.data.columns))
+    #st.write(columns)
+    selected_columns = st.multiselect("Select columns", st.session_state.data.columns,
+                                      label_visibility="collapsed",
+                                      #key='data_filter_select',
+                                      default=columns)
+    st.session_state.preprocessing_params[group] = selected_columns
+
+    #st.write(selected_columns)
+    st.session_state.data = st.session_state.data[selected_columns]
+
+
+
 def column_filters():
     st.write("Filter based on columns:")
     group = 'column_filter'
@@ -88,7 +110,7 @@ def column_filters():
 
     filters = st.multiselect("Select data filters", st.session_state.data.columns,
                              label_visibility="collapsed",
-                             key='data_filter_select',
+                             #key='data_filter_select',
                              default=cf_values)
     categorical = st.session_state.data.select_dtypes(include=['category', object]).columns
     columns_filtered = False
@@ -155,7 +177,7 @@ def column_filters():
             btn_update_filter = st.form_submit_button('Update filter')
         if btn_update_filter:
             # session_state.save_persistent_state(True)
-            st.write('update')
+            st.info('Updating filters...')
             # if columns_filtered:
             columns_filtered = False
             # st.session_state.data_filtered = True
@@ -174,15 +196,22 @@ def draw_preprocessing():
         st.session_state.preprocessing_expanded = True
         with preprocess_expander:
             recommendations()
+            column_selection()
             column_filters()
 
+            reset_preprocessing = st.button('Reset preprocessing')
+            if reset_preprocessing:
+                st.session_state.preprocessing_params = {}
+                #session_state.save_persistent_state(False)
 
+            #session_state.save_persistent_state(False)
                     #st.experimental_rerun()
             #else:
                 #st.session_state.data = st.session_state.original_data
 
     else:
         st.session_state.preprocessing_expanded = False
-        session_state.save_persistent_state(False)
+
+    #session_state.save_persistent_state(False)
 
     #st.write(st.session_state.preprocessing_params)

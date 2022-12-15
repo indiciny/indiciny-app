@@ -28,7 +28,10 @@ def filter_methods(category):
 def draw_method():
     st.write("### Analysis method")
     meta = st.session_state.method_meta
+    #st.write(list(meta.keys()))
+    mtd = (list(meta.keys())).index(st.session_state.method_selection)
     data_method = st.selectbox('Analysis method', meta, label_visibility="collapsed", key="method_selection")
+    #st.session_state.method_selection = data_method
     if data_method != '-':
         if st.session_state.persistent_state["method_selection"] != data_method:
             session_state.reset_after_method_selection()
@@ -51,8 +54,14 @@ def draw_method():
                             #session_state.set_session_state('method', method)
                             #session_state.increase_method_counter(1)
                             #data_handler.log_transaction('method', st.session_state.selected_method_meta['name'])
+    #elif st.session_state.method_selection != '-':
+        #st.write('am here')
+        #session_state.reset_after_method_selection()
     else:
-        session_state.reset_after_method_selection()
+        st.session_state.method_code_ran = False
+        st.session_state.method_code = ""
+        st.session_state.method_params = {}
+        st.session_state.user_changed_method_params = False
 
 
 def draw_method_view():
@@ -61,7 +70,12 @@ def draw_method_view():
         #data = {"data": st.session_state.data}
         #params = {**data, **st.session_state.method_params}
         #prerunparams = st.session_state.method_params.copy()
+        prerunparams = st.session_state.method_params.copy()
         data_handler.run_private_code(st.session_state.method_code)
+        if prerunparams != st.session_state.method_params:
+            st.session_state['user_changed_method_params'] = True
+        #else:
+            #st.session_state['user_changed_method_params'] = False
         #if prerunparams != st.session_state.method_params:
             #st.write('here')
             #session_state.save_persistent_state(True)

@@ -9,7 +9,7 @@ import time
 
 
 def initiate_states():
-    #st.session_state['data'] = ''
+    st.session_state['data'] = None
     st.session_state['data_meta'] = view_data.load_data_meta()
     st.session_state['data_loaded'] = False
     st.session_state['data_loads'] = 0
@@ -21,6 +21,7 @@ def initiate_states():
     st.session_state['method_executions'] = 0
     st.session_state['method_code_ran'] = False
     st.session_state['returned_data'] = None
+    st.session_state['user_changed_method_params'] = False
 
 
 
@@ -64,8 +65,11 @@ def init_app():
                 otac_check = (query_result[0][0] == st.session_state.otac)
                 if otac_time and otac_check:
                     initiate_states()
-                    session_state.load_persistent_state()
+                    state_file = "state_" + st.session_state.userlogin + ".json"
+                    session_state.load_persistent_state(state_file)
                     st.session_state.authorized = True
+
+
 
 
     if st.session_state.authorized:
@@ -77,25 +81,27 @@ def init_app():
         st.write('___')
         view_method.draw_method()
         view_method.draw_method_view()
-        if session_state.get_session_state('data_loaded'):
-            view_sidebar.draw_data_filter()
+
         #view_sidebar.draw_counter()
+        view_sidebar.draw_data_ops()
+
+        view_session_state()
 
         #btn_savestate = st.button('Save State')
         #if btn_savestate:
         #st.write(st.session_state.persistent_state)
         session_state.save_persistent_state(False)
-        if st.session_state.userlogin == st.secrets.developer:
-            view_session_state()
+
     else:
         st.write("Visit https://indiciny.com/app")
 
 
 def view_session_state():
-    with st.sidebar:
-        st.session_state.persistent_state
-        with st.expander("Details / Load"):
-            st.session_state
+    if st.session_state.userlogin == st.secrets.developer:
+        with st.sidebar:
+            with st.expander("Details / Load"):
+                st.session_state.persistent_state
+                st.session_state
 
 
 if __name__ == "__main__":

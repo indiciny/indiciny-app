@@ -21,6 +21,12 @@ def cd_dir(ftp, target_dir):
 
 
 @st.experimental_memo(ttl=3600, show_spinner=False)
+def get_examples():
+    ftp = FTP(st.secrets.ftpexamples.ftp_url, st.secrets.ftpexamples.ftp_user, st.secrets.ftpexamples.ftp_pw)
+    files = ftp.nlst()
+    return files
+
+@st.experimental_memo(ttl=3600, show_spinner=False)
 def get_cached_item(params):
     # Check cache availability
     ftp = FTP(st.secrets.ftpcache.ftp_url, st.secrets.ftpcache.ftp_user, st.secrets.ftpcache.ftp_pw)
@@ -45,10 +51,10 @@ def get_cached_item(params):
                     ftp.retrbinary(f"RETR {f_name}", file.write)
                     found_file = True
                 else:
-                    #st.sidebar.warning('cache miss: ' + f_name)
+                    st.sidebar.warning('cache miss: ' + f_name)
                     found_file = False
         if found_file:
-            #st.sidebar.success('cache hit: ' + f_name)
+            st.sidebar.success('cache hit: ' + f_name)
             df = pd.read_csv(f_name)
             try:
                 os.remove(f_name)

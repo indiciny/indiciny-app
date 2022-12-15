@@ -81,9 +81,12 @@ def draw_source_view():
         data_handler.run_private_code(st.session_state.data_code)
         if check_data_change:
             if not prerundata.equals(st.session_state.returned_data):
+                st.session_state.preprocessing_params = {}
                 st.session_state.method_selection = "-"
-        if prerunparams != st.session_state.data_params:
-            session_state.save_persistent_state(True)
+
+        #if prerunparams != st.session_state.data_params:
+            #st.sidebar.write('data params changed')
+            #session_state.save_persistent_state(True)
         if st.session_state.returned_data is not None:
         #if 'returned_data' in st.session_state:
             #if st.session_state.returned_data is not None: #and st.session_state.set_data:

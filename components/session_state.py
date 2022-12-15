@@ -45,7 +45,7 @@ def reset_states():
 
 
 def reset_persistent_state():
-    st.session_state.persistent_state = {
+    st.session_state['persistent_state'] = {
         "data_selection": "-",
         "data_selection_expanded": True,
         "data_params": {},
@@ -58,6 +58,7 @@ def reset_persistent_state():
         "method_params": {},
         "method_code": "",
         "method_code_ran": False,
+        "user_changed_method_params": st.session_state['user_changed_method_params']
     }
     for key, value in st.session_state.persistent_state.items():
         st.session_state[key] = value
@@ -78,10 +79,12 @@ def reset_after_data_selection():
         "method_params": {},
         "method_code": "",
         "method_code_ran": False,
+        "user_changed_method_params": False
     }
     for key, value in st.session_state.persistent_state.items():
         if key != "data_selection":
             st.session_state[key] = value
+    #st.experimental_rerun()
 
 
 def reset_after_method_selection():
@@ -98,17 +101,18 @@ def reset_after_method_selection():
         "method_params": st.session_state.persistent_state['method_params'],
         "method_code": "",
         "method_code_ran": False,
+        "user_changed_method_params": False
     }
     #st.write(st.session_state.persistent_state)
-    persist = ["data_selection","data_selection_expanded","data_params","data_code","data_code_ran","method_selection","method_params"]
+    persist = ["data_selection","data_selection_expanded","data_params","data_code","data_code_ran","preprocessing_expanded","preprocessing_params","method_selection","method_params"]
     for key, value in st.session_state.persistent_state.items():
         if key not in persist:
             st.session_state[key] = value
 
 
-def load_persistent_state():
+def load_persistent_state(state_name):
     reset_persistent_state()
-    state_name = "state_" + st.session_state.userlogin + ".json"
+    #state_name = "state_" + st.session_state.userlogin + ".json"
     with open(state_name, "wb") as file:
         with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
             if state_name in ftp.nlst():
@@ -117,19 +121,36 @@ def load_persistent_state():
             else:
                 found_state = False
     if found_state:
-        file = open(state_name, "r")
-        content = file.read()
-        st.session_state.persistent_state = dict(json.loads(content))
+        try:
+            file = open(state_name, "r")
+            content = file.read()
+            fread_success = True
+        except:
+            fread_success = False
+            del st.session_state['only_once']
+            st.experimental_rerun()
+        if fread_success:
+            st.session_state.persistent_state = dict(json.loads(content))
+    try:
         os.remove(state_name)
+    except:
+        pass
+
     for key, value in st.session_state.persistent_state.items():
         st.session_state[key] = value
+        #st.write(st.session_state[key])
+
+    st.session_state['previous_state'] = json.dumps(st.session_state.persistent_state)
+    #st.write(st.session_state['previous_state'])
 
 
 def save_persistent_state(force):
     #previous_state = st.session_state.persistent_state.copy()
     #previous_state = copy.deepcopy(st.session_state.persistent_state)
-    previous_state = json.loads(json.dumps(st.session_state.persistent_state))
-    #st.sidebar.write(previous_state)
+    #previous_state = json.loads(json.dumps(st.session_state.persistent_state))
+
+    #st.write(st.session_state.method_selection)
+    #st.write(st.session_state.preprocessing_params)
     st.session_state.persistent_state = {
         "data_selection": st.session_state.data_selection,
         "data_selection_expanded": st.session_state.data_selection_expanded,
@@ -142,9 +163,20 @@ def save_persistent_state(force):
         "method_selection_expanded": st.session_state.method_selection_expanded,
         "method_params": st.session_state.method_params,
         "method_code": st.session_state.method_code,
-        "method_code_ran": st.session_state.method_code_ran
+        "method_code_ran": st.session_state.method_code_ran,
+        "user_changed_method_params": st.session_state.user_changed_method_params
     }
-    if st.session_state.persistent_state != previous_state or force:
+
+    #if st.session_state.persistent_state != previous_state or force:
+    #previous_state = json.loads(json.dumps(st.session_state.previous_state))
+    previous_state = st.session_state['previous_state']
+    current_state = json.dumps(st.session_state.persistent_state)
+    #st.write(previous_state)
+    #st.write(current_state)
+
+    if previous_state != current_state or force:
+
+        st.info('Saving state...')
         state = json.dumps(st.session_state.persistent_state)
         bio = io.BytesIO()
         bio.write(state.encode())
@@ -152,6 +184,9 @@ def save_persistent_state(force):
         state_name = "state_" + st.session_state.userlogin + ".json"
         with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
             ftp.storbinary(f'STOR {state_name}', bio)
+
+        st.session_state['previous_state'] = json.dumps(st.session_state.persistent_state)
+
         st.experimental_rerun()
         #st.sidebar.write('uploaded')
     #else:
