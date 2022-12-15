@@ -66,6 +66,7 @@ def init_app():
                 if otac_time and otac_check:
                     initiate_states()
                     state_file = "state_" + st.session_state.userlogin + ".json"
+                    st.write(state_file)
                     session_state.load_persistent_state(state_file)
                     st.session_state.authorized = True
 
