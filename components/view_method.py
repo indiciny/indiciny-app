@@ -29,12 +29,13 @@ def draw_method():
     st.write("### Analysis method")
     meta = st.session_state.method_meta
     #st.write(list(meta.keys()))
-    mtd = (list(meta.keys())).index(st.session_state.method_selection)
-    data_method = st.selectbox('Analysis method', meta, label_visibility="collapsed", key="method_selection")
+    idx = (list(meta.keys())).index(st.session_state.method_selection)
+    data_method = st.selectbox('Analysis method', meta, index=idx, label_visibility="collapsed")
     #st.session_state.method_selection = data_method
     if data_method != '-':
         if st.session_state.persistent_state["method_selection"] != data_method:
             session_state.reset_after_method_selection()
+
         session_state.set_new_session_state('method_expanded', True)
         method_expander = st.expander("Details / Load", expanded=st.session_state.method_selection_expanded)
         if method_expander.expanded:
@@ -49,6 +50,7 @@ def draw_method():
                     btn_load_method = st.button('Analyze')
                     if btn_load_method:
                         with st.spinner('Analyzing...'):
+                            st.session_state['method_selection'] = data_method
                             load_method(st.session_state.selected_method_meta)
                             #session_state.set_session_state('method_executed', True)
                             #session_state.set_session_state('method', method)

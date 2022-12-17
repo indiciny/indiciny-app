@@ -110,11 +110,17 @@ def reset_after_method_selection():
             st.session_state[key] = value
 
 
-def load_persistent_state(state_name):
+def load_persistent_state(state_name, directory):
     reset_persistent_state()
     #state_name = "state_" + st.session_state.userlogin + ".json"
     with open(state_name, "wb") as file:
         with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
+            if directory != '':
+                try:
+                    ftp.cwd(directory)
+                except:
+                    ftp.mkd(directory)
+                    ftp.cwd(directory)
             if state_name in ftp.nlst():
                 ftp.retrbinary(f"RETR {state_name}", file.write)
                 found_state = True
@@ -144,7 +150,7 @@ def load_persistent_state(state_name):
     #st.write(st.session_state['previous_state'])
 
 
-def save_persistent_state(force):
+def save_persistent_state(force, state_name, directory):
     #previous_state = st.session_state.persistent_state.copy()
     #previous_state = copy.deepcopy(st.session_state.persistent_state)
     #previous_state = json.loads(json.dumps(st.session_state.persistent_state))
@@ -175,19 +181,25 @@ def save_persistent_state(force):
     #st.write(current_state)
 
     if previous_state != current_state or force:
+        with st.spinner("Saving state..."):
+            state = json.dumps(st.session_state.persistent_state)
+            bio = io.BytesIO()
+            bio.write(state.encode())
+            bio.seek(0)
+            #state_name = "state_" + st.session_state.uid + ".json"
+            with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
+                if directory != '':
+                    try:
+                        ftp.cwd(directory)
+                    except:
+                        ftp.mkd(directory)
+                        ftp.cwd(directory)
+                ftp.storbinary(f'STOR {state_name}', bio)
 
-        st.info('Saving state...')
-        state = json.dumps(st.session_state.persistent_state)
-        bio = io.BytesIO()
-        bio.write(state.encode())
-        bio.seek(0)
-        state_name = "state_" + st.session_state.userlogin + ".json"
-        with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
-            ftp.storbinary(f'STOR {state_name}', bio)
+            st.session_state['previous_state'] = json.dumps(st.session_state.persistent_state)
+            data_handler.log_transaction('state_change')
 
-        st.session_state['previous_state'] = json.dumps(st.session_state.persistent_state)
-
-        st.experimental_rerun()
+        #st.experimental_rerun()
         #st.sidebar.write('uploaded')
     #else:
         #st.sidebar.write('unchanged')

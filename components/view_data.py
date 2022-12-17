@@ -21,6 +21,7 @@ def load_data(meta):
     #data_handler.run_private_code(st.session_state.data_code)
     session_state.set_session_state('data_selection_expanded', False)
     st.session_state.data_code_ran = True
+    st.session_state.data_selection = st.session_state.data_name
 
 
     #if meta['data_type'] == 'csv':
@@ -44,7 +45,8 @@ def load_data(meta):
 def draw_source():
     st.write("### Data selection")
     meta = st.session_state.data_meta
-    data_source = st.selectbox('src', meta, label_visibility="collapsed", key="data_selection") #, on_change=session_state.reset_after_data_selection())
+    idx = (list(meta.keys())).index(st.session_state.data_selection)
+    data_source = st.selectbox('src', meta, index=idx, label_visibility="collapsed")#, key="data_selection") #, on_change=session_state.reset_after_data_selection())
     if data_source != '-':
         if st.session_state.persistent_state["data_selection"] != data_source:
             session_state.reset_after_data_selection()

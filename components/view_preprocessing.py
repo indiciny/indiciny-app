@@ -190,17 +190,28 @@ def column_filters():
             #
 
 
+def drop_na():
+    label = "Drop empty values?"
+    is_checked = False
+    drop_nax = st.checkbox(label, value=is_checked)
+    if drop_nax:
+        st.session_state.data = st.session_state.data.dropna()
+
+
 def draw_preprocessing():
-    preprocess_expander = st.expander("Preprocessing", expanded=st.session_state.preprocessing_expanded)
+    emp = st.empty()
+    preprocess_expander = emp.expander("Preprocessing", expanded=st.session_state.preprocessing_expanded)
     if preprocess_expander.expanded:
         st.session_state.preprocessing_expanded = True
         with preprocess_expander:
             recommendations()
             column_selection()
             column_filters()
+            #drop_na()
 
             reset_preprocessing = st.button('Reset preprocessing')
             if reset_preprocessing:
+                emp.empty()
                 st.session_state.preprocessing_params = {}
                 #session_state.save_persistent_state(False)
 

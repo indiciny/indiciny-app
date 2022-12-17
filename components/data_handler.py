@@ -20,11 +20,19 @@ def cd_dir(ftp, target_dir):
             ftp.mkd(target_dir)
 
 
-@st.experimental_memo(ttl=3600, show_spinner=False)
-def get_examples():
-    ftp = FTP(st.secrets.ftpexamples.ftp_url, st.secrets.ftpexamples.ftp_user, st.secrets.ftpexamples.ftp_pw)
+#@st.experimental_memo(ttl=3600, show_spinner=False)
+def get_states(directory):
+    ftp = FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw)
+    ftp.cwd(directory)
     files = ftp.nlst()
     return files
+
+
+def delete_files(directory, file):
+    ftp = FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw)
+    ftp.cwd(directory)
+    ftp.delete(file)
+
 
 @st.experimental_memo(ttl=3600, show_spinner=False)
 def get_cached_item(params):
@@ -51,10 +59,10 @@ def get_cached_item(params):
                     ftp.retrbinary(f"RETR {f_name}", file.write)
                     found_file = True
                 else:
-                    st.sidebar.warning('cache miss: ' + f_name)
+                    #st.sidebar.warning('cache miss: ' + f_name)
                     found_file = False
         if found_file:
-            st.sidebar.success('cache hit: ' + f_name)
+            #st.sidebar.success('cache hit: ' + f_name)
             df = pd.read_csv(f_name)
             try:
                 os.remove(f_name)
@@ -142,10 +150,10 @@ def run_db_query(query):
         return cursor.fetchall()
 
 
-def log_transaction(type, action):
+def log_transaction(type):
     dbc = mysql.connector.connect(**st.secrets["tradb"]) #connect_transaction_db()
-    sql = "INSERT INTO indiciny_transactions (user_id, timestamp, transaction_type, transaction_object) VALUES (%s, %s, %s, %s)"
-    values = (st.session_state.userlogin, round(time.time()), type, action)
+    sql = "INSERT INTO indiciny_transactions (user_id, transaction_type, data_source, data_method) VALUES (%s, %s, %s, %s)"
+    values = (st.session_state.uid, type, st.session_state.data_code, st.session_state.method_code)
     cursor = dbc.cursor()
     cursor.execute(sql, values)
     dbc.commit()

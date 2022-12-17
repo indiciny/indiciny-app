@@ -4,6 +4,7 @@ import components.view_data as view_data
 import components.view_preprocessing as view_preprocessing
 import components.view_method as view_method
 import components.view_sidebar as view_sidebar
+import components.data_handler as data_handler
 import mysql.connector
 import time
 
@@ -32,6 +33,45 @@ def hide_header():
                 </style>
             '''
     st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
+
+
+def user_id_affinity(user_email):
+    # Connect to the database
+    cnx = mysql.connector.connect(**st.secrets["tradb"])
+
+    # Create a cursor
+    cursor = cnx.cursor()
+
+    # Construct the INSERT IGNORE INTO statement
+    sql = """
+    INSERT IGNORE INTO indiciny_user_affinity (user_mail)
+    VALUES (%s)
+    """
+
+    # Define the values to insert
+    #values = user_email
+
+    # Execute the statement
+    cursor.execute(sql, (user_email,))
+
+    # Read the record that was just inserted or updated
+    sql = "SELECT user_id FROM indiciny_user_affinity WHERE user_mail = %s"
+    cursor.execute(sql, (user_email,))
+
+    # Fetch the record
+    record = (cursor.fetchone())[0]
+
+    # Print the record
+    #st.write(record)
+
+    # Commit the transaction
+    cnx.commit()
+
+    # Close the cursor and connection
+    cursor.close()
+    cnx.close()
+    return record
+
 
 
 def init_app():
@@ -65,10 +105,11 @@ def init_app():
                 otac_check = (query_result[0][0] == st.session_state.otac)
                 if otac_time and otac_check:
                     initiate_states()
-                    state_file = "state_" + st.session_state.userlogin + ".json"
-                    st.write(state_file)
-                    session_state.load_persistent_state(state_file)
+                    st.session_state.uid = str(user_id_affinity(st.session_state.userlogin))
+                    state_file = "state_" + st.session_state.uid + ".json"
+                    session_state.load_persistent_state(state_file, st.session_state.uid)
                     st.session_state.authorized = True
+                    data_handler.log_transaction('login')
 
 
 
@@ -91,7 +132,8 @@ def init_app():
         #btn_savestate = st.button('Save State')
         #if btn_savestate:
         #st.write(st.session_state.persistent_state)
-        session_state.save_persistent_state(False)
+        state_file = "state_" + st.session_state.uid + ".json"
+        session_state.save_persistent_state(False, state_file, st.session_state.uid)
 
     else:
         st.write("Visit https://indiciny.com/app")
