@@ -107,9 +107,11 @@ def init_app():
                     initiate_states()
                     st.session_state.uid = str(user_id_affinity(st.session_state.userlogin))
                     state_file = "state_" + st.session_state.uid + ".json"
+                    st.write(state_file + " " + st.session_state.uid)
                     session_state.load_persistent_state(state_file, st.session_state.uid)
                     st.session_state.authorized = True
                     data_handler.log_transaction('login')
+
 
 
 
