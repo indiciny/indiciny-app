@@ -41,8 +41,6 @@ def update_data_filter(filters):
 
 
 def set_preprocessing_param(group, name, value):
-    #if group not in st.session_state.preprocessing_params:
-    #    st.session_state.preprocessing_params[group] = {}
     st.session_state.preprocessing_params[group][name] = value
 
 
@@ -86,16 +84,11 @@ def column_selection():
     else:
         columns = st.session_state.preprocessing_params[group]
         columns = list(set(columns).intersection(st.session_state.data.columns))
-    #st.write(columns)
     selected_columns = st.multiselect("Select columns", st.session_state.data.columns,
                                       label_visibility="collapsed",
-                                      #key='data_filter_select',
                                       default=columns)
     st.session_state.preprocessing_params[group] = selected_columns
-
-    #st.write(selected_columns)
     st.session_state.data = st.session_state.data[selected_columns]
-
 
 
 def column_filters():
@@ -110,15 +103,12 @@ def column_filters():
 
     filters = st.multiselect("Select data filters", st.session_state.data.columns,
                              label_visibility="collapsed",
-                             #key='data_filter_select',
                              default=cf_values)
     categorical = st.session_state.data.select_dtypes(include=['category', object]).columns
     columns_filtered = False
     if group in st.session_state.preprocessing_params:
         dfdict = st.session_state.preprocessing_params[group]
-    #else:
     column_filter = st.session_state.preprocessing_params[group]
-    #st.write(column_filter)
 
     dfdictnew = {}
     if len(filters) > 0:
@@ -127,18 +117,13 @@ def column_filters():
             for dfilter in filters:
                 if filters.index(dfilter) > 0:
                     st.write('---')
-                #st.write(dfilter)
                 if st.session_state.data[dfilter].name in categorical:
-
                     if st.session_state.data[dfilter].nunique(dropna=True) < 10:
                         if dfilter in column_filter:
-                            #st.write(column_filter[dfilter]['filter'])
                             cfil = column_filter[dfilter]['filter']
                             columns_filtered = True
                         else:
-                            cfil = st.session_state.data[dfilter].unique() #(dropna=True)
-
-                        #st.write(cfil)
+                            cfil = st.session_state.data[dfilter].unique()
                         catfilters = st.multiselect("Select categories",
                                                     st.session_state.data[dfilter].unique(),
                                                     default=cfil)
@@ -155,7 +140,6 @@ def column_filters():
                     else:
                         dstep = 1
                     if dfilter in column_filter:
-                        #st.write(column_filter[dfilter]['filter'])
                         dmins = column_filter[dfilter]['filter'][0]
                         dmaxs = column_filter[dfilter]['filter'][1]
                         columns_filtered = True
@@ -176,19 +160,10 @@ def column_filters():
 
             btn_update_filter = st.form_submit_button('Update filter')
         if btn_update_filter:
-            # session_state.save_persistent_state(True)
-            st.info('Updating filters...')
-            # if columns_filtered:
             columns_filtered = False
-            # st.session_state.data_filtered = True
-            # st.write(dfdict)
             st.session_state.preprocessing_params[group] = dfdictnew
         with st.spinner("Updating filters..."):
             update_data_filter(st.session_state.preprocessing_params[group])
-            #st.write(dfdict)
-            #st.session_state.preprocessing_params[group] = {}
-
-            #
 
 
 def drop_na():
@@ -214,16 +189,5 @@ def draw_preprocessing():
             if reset_preprocessing:
                 emp.empty()
                 st.session_state.preprocessing_params = {}
-                #session_state.save_persistent_state(False)
-
-            #session_state.save_persistent_state(False)
-                    #st.experimental_rerun()
-            #else:
-                #st.session_state.data = st.session_state.original_data
-
     else:
         st.session_state.preprocessing_expanded = False
-
-    #session_state.save_persistent_state(False)
-
-    #st.write(st.session_state.preprocessing_params)

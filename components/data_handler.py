@@ -8,16 +8,6 @@ import io
 from dateutil import parser
 import datetime
 import os
-#from StringIO import StringIO
-
-
-def cd_dir(ftp, target_dir):
-    if target_dir != "":
-        try:
-            ftp.cwd(target_dir)
-        except IOError:
-            cd_dir(ftp, "/".join(target_dir.split("/")[:-1]))
-            ftp.mkd(target_dir)
 
 
 #@st.experimental_memo(ttl=3600, show_spinner=False)
@@ -103,14 +93,6 @@ def store_cached_item(params, data):
         #st.write('stored data: ' + f_name)
 
 
-def custom_caching():
-    cache_item = 'params'
-    with FTP(st.secrets.ftpcache.ftp_url, st.secrets.ftpcache.ftp_user, st.secrets.ftpcache.ftp_pw) as ftp:
-        dir = ftp.mlsd()
-        #ftp.storbinary(f'STOR {state_name}', bio)
-    #st.write('custom cache')
-    #st.write(dir)
-
 #@st.experimental_memo
 def get_private_file(filename):
     github_session = requests.Session()
@@ -129,8 +111,6 @@ def get_public_csv(filename):
 
 #@st.experimental_memo
 def run_private_code(filename):
-    #def get_cached_item(params):
-    #    st.write('hello')
     filename = "code/" + filename
     content = get_private_file(filename)
     code = compile(content, "<string>", "exec")

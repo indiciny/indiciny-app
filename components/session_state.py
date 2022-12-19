@@ -7,6 +7,7 @@ import json
 import io
 import copy
 import os
+import pandas as pd
 
 
 def set_session_state(key, value):
@@ -32,16 +33,9 @@ def increase_method_counter(increment):
     st.session_state.method_executions = st.session_state.method_executions + increment
 
 
-#def update_persistent_state(key, value):
-    #st.session_state[key] = value
-    #st.session_state.persistent_state[key] = value
-
-
 def reset_states():
     st.session_state.returned_data = None
-    st.session_state.data = None
-    #st.session_state.data = None
-
+    st.session_state.data = pd.DataFrame()
 
 
 def reset_persistent_state():
@@ -84,7 +78,6 @@ def reset_after_data_selection():
     for key, value in st.session_state.persistent_state.items():
         if key != "data_selection":
             st.session_state[key] = value
-    #st.experimental_rerun()
 
 
 def reset_after_method_selection():
@@ -103,7 +96,6 @@ def reset_after_method_selection():
         "method_code_ran": False,
         "user_changed_method_params": False
     }
-    #st.write(st.session_state.persistent_state)
     persist = ["data_selection","data_selection_expanded","data_params","data_code","data_code_ran","preprocessing_expanded","preprocessing_params","method_selection","method_params"]
     for key, value in st.session_state.persistent_state.items():
         if key not in persist:
@@ -112,7 +104,6 @@ def reset_after_method_selection():
 
 def load_persistent_state(state_name, directory):
     reset_persistent_state()
-    #state_name = "state_" + st.session_state.userlogin + ".json"
     with open(state_name, "wb") as file:
         with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
             if directory != '':
@@ -144,19 +135,12 @@ def load_persistent_state(state_name, directory):
 
     for key, value in st.session_state.persistent_state.items():
         st.session_state[key] = value
-        #st.write(st.session_state[key])
 
     st.session_state['previous_state'] = json.dumps(st.session_state.persistent_state)
-    #st.write(st.session_state['previous_state'])
+
 
 
 def save_persistent_state(force, state_name, directory):
-    #previous_state = st.session_state.persistent_state.copy()
-    #previous_state = copy.deepcopy(st.session_state.persistent_state)
-    #previous_state = json.loads(json.dumps(st.session_state.persistent_state))
-
-    #st.write(st.session_state.method_selection)
-    #st.write(st.session_state.preprocessing_params)
     st.session_state.persistent_state = {
         "data_selection": st.session_state.data_selection,
         "data_selection_expanded": st.session_state.data_selection_expanded,
@@ -173,12 +157,8 @@ def save_persistent_state(force, state_name, directory):
         "user_changed_method_params": st.session_state.user_changed_method_params
     }
 
-    #if st.session_state.persistent_state != previous_state or force:
-    #previous_state = json.loads(json.dumps(st.session_state.previous_state))
     previous_state = st.session_state['previous_state']
     current_state = json.dumps(st.session_state.persistent_state)
-    #st.write(previous_state)
-    #st.write(current_state)
 
     if previous_state != current_state or force:
         with st.spinner("Saving state..."):
@@ -186,7 +166,6 @@ def save_persistent_state(force, state_name, directory):
             bio = io.BytesIO()
             bio.write(state.encode())
             bio.seek(0)
-            #state_name = "state_" + st.session_state.uid + ".json"
             with FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw) as ftp:
                 if directory != '':
                     try:
@@ -199,7 +178,3 @@ def save_persistent_state(force, state_name, directory):
             st.session_state['previous_state'] = json.dumps(st.session_state.persistent_state)
             data_handler.log_transaction('state_change')
 
-        #st.experimental_rerun()
-        #st.sidebar.write('uploaded')
-    #else:
-        #st.sidebar.write('unchanged')

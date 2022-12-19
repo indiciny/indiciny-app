@@ -14,39 +14,19 @@ def load_data_meta():
     return meta
 
 
-#@st.cache(ttl=ttl_value)
 def load_data(meta):
     st.session_state.data_name = st.session_state.selected_data_meta['name']
     st.session_state.data_code = "data/" + meta['data_location']
-    #data_handler.run_private_code(st.session_state.data_code)
     session_state.set_session_state('data_selection_expanded', False)
     st.session_state.data_code_ran = True
     st.session_state.data_selection = st.session_state.data_name
-
-
-    #if meta['data_type'] == 'csv':
-    #    data = data_handler.get_public_csv(meta['data_location'])
-    #    session_state.set_session_state('data_loaded', True)
-    #    session_state.set_session_state('data', data)
-    #    session_state.set_session_state('original_data', data)
-    #    session_state.increase_data_counter(1)
-     #   data_handler.log_transaction('data', st.session_state.selected_data_meta['name'])
-        #return data
-    #elif meta['data_type'] == 'code':
-    #    st.session_state.data_code = data_handler.run_private_code(meta['data_location'])
-    #    st.session_state.execute_code = True
-    #    st.session_state.set_data = True
-        #data = data_handler.run_private_code(meta['data_location'])
-        #exec(data)
-            
-        # return data
 
 
 def draw_source():
     st.write("### Data selection")
     meta = st.session_state.data_meta
     idx = (list(meta.keys())).index(st.session_state.data_selection)
-    data_source = st.selectbox('src', meta, index=idx, label_visibility="collapsed")#, key="data_selection") #, on_change=session_state.reset_after_data_selection())
+    data_source = st.selectbox('src', meta, index=idx, label_visibility="collapsed")
     if data_source != '-':
         if st.session_state.persistent_state["data_selection"] != data_source:
             session_state.reset_after_data_selection()
@@ -61,21 +41,17 @@ def draw_source():
                 st.write("Categories: " + ', '.join(st.session_state.selected_data_meta['categories']))
 
                 btn_load_data = st.button('Load data')
-                if btn_load_data:# or st.session_state.data_code_ran:
+                if btn_load_data:
                     with st.spinner('Loading data...'):
                         load_data(st.session_state.selected_data_meta)
 
     else:
         session_state.reset_after_data_selection()
-        #session_state.set_session_state('data_loaded', False)
 
 
 def draw_source_view():
     if st.session_state.data_code_ran:
-        #if 'returned_data' not in st.session_state:
-        #    data_handler.run_private_code(st.session_state.data_code)
-        #if st.session_state.returned_data is None:
-        prerunparams = st.session_state.data_params.copy()
+        #prerunparams = st.session_state.data_params.copy()
         check_data_change = False
         if st.session_state.returned_data is not None:
             prerundata = st.session_state.returned_data.copy()
@@ -86,24 +62,11 @@ def draw_source_view():
                 st.session_state.preprocessing_params = {}
                 st.session_state.method_selection = "-"
 
-        #if prerunparams != st.session_state.data_params:
-            #st.sidebar.write('data params changed')
-            #session_state.save_persistent_state(True)
         if st.session_state.returned_data is not None:
-        #if 'returned_data' in st.session_state:
-            #if st.session_state.returned_data is not None: #and st.session_state.set_data:
-            #st.session_state.set_data = False
-            #session_state.set_session_state('data_loaded', True)
             session_state.set_session_state('data', st.session_state.returned_data)
             session_state.set_session_state('original_data', st.session_state.returned_data)
-            #session_state.increase_data_counter(1)
-            #data_handler.log_transaction('data', st.session_state.selected_data_meta['name'])
-    #if st.session_state.data_loaded:
             session_state.set_session_state('data_selection_expanded', False)
             view_preprocessing.draw_preprocessing()
             sv_container = st.container()
             with sv_container:
                 st.dataframe(st.session_state.data)
-                #st.session_state.data
-                #st.download_button('Download data', st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")
-

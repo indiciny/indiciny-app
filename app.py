@@ -7,6 +7,7 @@ import components.view_sidebar as view_sidebar
 import components.data_handler as data_handler
 import mysql.connector
 import time
+import pandas as pd
 
 
 def initiate_states():
@@ -23,7 +24,6 @@ def initiate_states():
     st.session_state['method_code_ran'] = False
     st.session_state['returned_data'] = None
     st.session_state['user_changed_method_params'] = False
-
 
 
 def hide_header():
@@ -48,9 +48,6 @@ def user_id_affinity(user_email):
     VALUES (%s)
     """
 
-    # Define the values to insert
-    #values = user_email
-
     # Execute the statement
     cursor.execute(sql, (user_email,))
 
@@ -60,9 +57,6 @@ def user_id_affinity(user_email):
 
     # Fetch the record
     record = (cursor.fetchone())[0]
-
-    # Print the record
-    #st.write(record)
 
     # Commit the transaction
     cnx.commit()
@@ -120,6 +114,14 @@ def init_app():
 
         view_data.draw_source()
         view_data.draw_source_view()
+        #if st.session_state.data
+        if st.session_state.data is not None:
+            btn_merge_data = st.button('Merge data')
+            if btn_merge_data:
+                st.write('---')
+                st.write('secondary data...')
+
+
         st.write('___')
         view_method.draw_method()
         view_method.draw_method_view()
