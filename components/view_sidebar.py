@@ -86,7 +86,7 @@ def draw_load_state(directory, prefix, heading):
                 session_state.save_persistent_state(True, state_file, st.session_state.uid)
         return states
     except:
-        return []
+        return pd.DataFrame()
 
 
 def delete_states(state_list):
