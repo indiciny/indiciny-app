@@ -63,26 +63,29 @@ def draw_examples_part():
 
 
 def draw_load_state(directory, prefix, heading):
-    states = data_handler.get_states(directory)
-    states = list(filter(lambda x: x.endswith('.json'), states))
-    states = pd.DataFrame(states, columns=['file'])
-    states['name'] = states['file'].str.split(r"\.json", expand=True)[0]
-    states['name'] = states['name'].str.replace(prefix, '')
-    top_row = pd.DataFrame({'name': '-'}, index=[0])
-    states = pd.concat([top_row, states.loc[:]]).reset_index(drop=True)
-    state_selection = st.selectbox(heading, states)  # .name)
-    if state_selection != '-':
-        st.warning('Loading this state will overwrite your current selections! Do you want to continue?')
-        overwrite = st.button('Continue')
-        if overwrite:
-            # example_file = examples.loc[examples['name'] == example_selection]['file'].values[0]
-            # st.write(example_file)
-            state_file = prefix + state_selection + ".json"
-            session_state.load_persistent_state(state_file, directory)
-            state_file = "state_" + st.session_state.uid + ".json"
-            # st.session_state.selected_example = '-'
-            session_state.save_persistent_state(True, state_file, st.session_state.uid)
-    return states
+    try:
+        states = data_handler.get_states(directory)
+        states = list(filter(lambda x: x.endswith('.json'), states))
+        states = pd.DataFrame(states, columns=['file'])
+        states['name'] = states['file'].str.split(r"\.json", expand=True)[0]
+        states['name'] = states['name'].str.replace(prefix, '')
+        top_row = pd.DataFrame({'name': '-'}, index=[0])
+        states = pd.concat([top_row, states.loc[:]]).reset_index(drop=True)
+        state_selection = st.selectbox(heading, states)  # .name)
+        if state_selection != '-':
+            st.warning('Loading this state will overwrite your current selections! Do you want to continue?')
+            overwrite = st.button('Continue')
+            if overwrite:
+                # example_file = examples.loc[examples['name'] == example_selection]['file'].values[0]
+                # st.write(example_file)
+                state_file = prefix + state_selection + ".json"
+                session_state.load_persistent_state(state_file, directory)
+                state_file = "state_" + st.session_state.uid + ".json"
+                # st.session_state.selected_example = '-'
+                session_state.save_persistent_state(True, state_file, st.session_state.uid)
+        return states
+    except:
+        return []
 
 
 def delete_states(state_list):
