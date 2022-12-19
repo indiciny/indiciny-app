@@ -32,7 +32,7 @@ def draw_sidebar():
                     session_state.save_persistent_state(True, state_file, st.session_state.uid + "/saved")
 
                 #with st.expander("More"):
-                if state_list:
+                if not state_list.empty:
                     delete_states(state_list)
 
 

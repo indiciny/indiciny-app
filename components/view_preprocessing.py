@@ -183,7 +183,8 @@ def column_filters():
             # st.session_state.data_filtered = True
             # st.write(dfdict)
             st.session_state.preprocessing_params[group] = dfdictnew
-        update_data_filter(st.session_state.preprocessing_params[group])
+        with st.spinner("Updating filters..."):
+            update_data_filter(st.session_state.preprocessing_params[group])
             #st.write(dfdict)
             #st.session_state.preprocessing_params[group] = {}
 
