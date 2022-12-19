@@ -32,7 +32,8 @@ def draw_sidebar():
                     session_state.save_persistent_state(True, state_file, st.session_state.uid + "/saved")
 
                 #with st.expander("More"):
-                delete_states(state_list)
+                if state_list:
+                    delete_states(state_list)
 
 
 def draw_examples_part():
