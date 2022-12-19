@@ -23,7 +23,11 @@ def cd_dir(ftp, target_dir):
 #@st.experimental_memo(ttl=3600, show_spinner=False)
 def get_states(directory):
     ftp = FTP(st.secrets.ftp.ftp_url, st.secrets.ftp.ftp_user, st.secrets.ftp.ftp_pw)
-    ftp.cwd(directory)
+    try:
+        ftp.cwd(directory)
+    except:
+        ftp.mkd(directory)
+        ftp.cwd(directory)
     files = ftp.nlst()
     return files
 
