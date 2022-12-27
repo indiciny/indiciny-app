@@ -8,22 +8,27 @@ import components.data_handler as data_handler
 import mysql.connector
 import time
 import pandas as pd
+import sys
 
 
 def initiate_states():
-    st.session_state['data'] = None
+    st.session_state['data'] = {}
+    st.session_state['original_data'] = {}
     st.session_state['data_meta'] = view_data.load_data_meta()
     st.session_state['data_loaded'] = False
     st.session_state['data_loads'] = 0
-    st.session_state['data_code_ran'] = False
+    #st.session_state['data_code_ran'] = False
     st.session_state['data_filtered'] = False
     st.session_state['execute_code'] = False
     st.session_state['method_meta'] = view_method.load_method_meta()
     st.session_state['method_executed'] = False
     st.session_state['method_executions'] = 0
     st.session_state['method_code_ran'] = False
-    st.session_state['returned_data'] = None
+    st.session_state['returned_data'] = {}
+    st.session_state['secondary_returned_data'] = {}
     st.session_state['user_changed_method_params'] = False
+    st.session_state['secondary_added'] = False
+    st.session_state['secondary_merged'] = False
 
 
 def hide_header():
@@ -109,27 +114,37 @@ def init_app():
 
 
     if st.session_state.authorized:
+        view_session_state()
 
         view_sidebar.draw_sidebar()
 
-        view_data.draw_source()
-        view_data.draw_source_view()
-        #if st.session_state.data
-        if st.session_state.data is not None:
-            btn_merge_data = st.button('Merge data')
-            if btn_merge_data:
+        view_data.draw_source(0)
+        view_data.draw_source_view(0)
+        #view_preprocessing.draw_preprocessing('0')
+
+        if '0' in st.session_state.data:
+            st.session_state.data['final'] = st.session_state.data['0']
+            view_preprocessing.draw_preprocessing()
+
+
+            sv_container = st.container()
+            with sv_container:
                 st.write('---')
-                st.write('secondary data...')
+                st.write("### Data preview")
+                st.dataframe(st.session_state.data['final'])
+            #view_preprocessing.draw_preprocessing()
 
 
         st.write('___')
         view_method.draw_method()
         view_method.draw_method_view()
 
-        #view_sidebar.draw_counter()
-        view_sidebar.draw_data_ops()
+        view_data_info()
 
-        view_session_state()
+        #view_sidebar.draw_counter()
+        #view_sidebar.draw_data_ops()
+
+        #view_session_state()
 
         #btn_savestate = st.button('Save State')
         #if btn_savestate:
@@ -139,6 +154,35 @@ def init_app():
 
     else:
         st.write("Visit https://indiciny.com/app")
+
+
+def view_data_info():
+
+    def print_dinf(id, classifier):
+        if classifier:
+            st.write(classifier + ": " + st.session_state.data_objects[id]['data_selection'])
+            st.write(st.session_state.data_objects[id]['data_params'])
+        shape = st.session_state.data[id].shape
+        st.write("Rows: " + str(shape[0]) + " / Columns: " + str(shape[1]))
+        size = round(sys.getsizeof(st.session_state.data[id]) / 1048576, 2)
+        st.write("Size in MB: " + str(size))
+
+    with st.sidebar:
+        with st.expander("Data information"):
+            if '0' in st.session_state.data:
+                print_dinf('0', "Primary data source")
+                st.write('---')
+            if '1' in st.session_state.data:
+                print_dinf('1', "Secondary data source")
+                st.write('---')
+            if 'final' in st.session_state.data:
+                st.write('Merged data:')
+                print_dinf('final', None)
+                st.download_button("Download data", st.session_state.data['final'].to_csv(index=False),
+                                   file_name="indiciny_data.csv")
+
+
+
 
 
 def view_session_state():

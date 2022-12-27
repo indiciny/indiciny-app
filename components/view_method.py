@@ -50,15 +50,16 @@ def draw_method():
                             st.session_state['method_selection'] = data_method
                             load_method(st.session_state.selected_method_meta)
     else:
-        st.session_state.method_code_ran = False
-        st.session_state.method_code = ""
-        st.session_state.method_params = {}
-        st.session_state.user_changed_method_params = False
+        session_state.reset_after_method_selection()
+        #st.session_state.method_code_ran = False
+        #st.session_state.method_code = ""
+        #st.session_state.method_params = {}
+        #st.session_state.user_changed_method_params = False
 
 
 def draw_method_view():
     if st.session_state.method_code_ran:
         prerunparams = st.session_state.method_params.copy()
-        data_handler.run_private_code(st.session_state.method_code)
+        data_handler.run_private_code(st.session_state.method_code, None)
         if prerunparams != st.session_state.method_params:
             st.session_state['user_changed_method_params'] = True

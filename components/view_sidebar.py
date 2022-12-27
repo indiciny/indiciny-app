@@ -93,7 +93,7 @@ def draw_data_ops():
     with st.sidebar:
         if st.session_state.data is not None:
             st.write('---')
-            st.download_button("Download data", st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")
+            #st.download_button("Download data", st.session_state.data.to_csv(index=False), file_name=st.session_state.data_selection + ".csv")
             st.write('---')
 
 

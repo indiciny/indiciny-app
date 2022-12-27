@@ -32,7 +32,7 @@ def delete_files(directory, file):
 def get_cached_item(params):
     # Check cache availability
     ftp = FTP(st.secrets.ftpcache.ftp_url, st.secrets.ftpcache.ftp_user, st.secrets.ftpcache.ftp_pw)
-    target_dir = st.session_state.data_code.replace("/", "-").replace(".", "-")
+    target_dir = st.session_state.data_objects[st.session_state.data_index]['data_code'].replace("/", "-").replace(".", "-")
     try:
         ftp.cwd(target_dir)
     except:
@@ -74,7 +74,7 @@ def store_cached_item(params, data):
     if f_name != "":
         f_name = f_name + ".csv"
         ftp = FTP(st.secrets.ftpcache.ftp_url, st.secrets.ftpcache.ftp_user, st.secrets.ftpcache.ftp_pw)
-        target_dir = st.session_state.data_code.replace("/", "-").replace(".", "-")
+        target_dir = st.session_state.data_objects[st.session_state.data_index]['data_code'].replace("/", "-").replace(".", "-")
         try:
             ftp.cwd(target_dir)
         except:
@@ -90,6 +90,7 @@ def store_cached_item(params, data):
             os.remove(f_name)
         except:
             pass
+        st.experimental_memo.clear()
         #st.write('stored data: ' + f_name)
 
 
@@ -110,7 +111,9 @@ def get_public_csv(filename):
 
 
 #@st.experimental_memo
-def run_private_code(filename):
+def run_private_code(filename, data_index):
+    if data_index is not None:
+        st.session_state.data_index = data_index
     filename = "code/" + filename
     content = get_private_file(filename)
     code = compile(content, "<string>", "exec")
@@ -137,7 +140,14 @@ def run_db_query(query):
 def log_transaction(type):
     dbc = mysql.connector.connect(**st.secrets["tradb"]) #connect_transaction_db()
     sql = "INSERT INTO indiciny_transactions (user_id, transaction_type, data_source, data_method) VALUES (%s, %s, %s, %s)"
-    values = (st.session_state.uid, type, st.session_state.data_code, st.session_state.method_code)
+    do = []
+    if st.session_state.data_objects:
+        for key, data in st.session_state.data_objects.items():
+            do.append(data['data_code'])
+        dc = ', '.join(do)
+    else:
+        dc = ''
+    values = (st.session_state.uid, type, dc, st.session_state.method_code)
     cursor = dbc.cursor()
     cursor.execute(sql, values)
     dbc.commit()
