@@ -113,6 +113,8 @@ def init_app():
 
 
 
+
+
     if st.session_state.authorized:
         view_session_state()
 
@@ -130,14 +132,25 @@ def init_app():
             sv_container = st.container()
             with sv_container:
                 st.write('---')
-                st.write("### Data preview")
+                st.write("## Data preview")
                 st.dataframe(st.session_state.data['final'])
             #view_preprocessing.draw_preprocessing()
 
 
         st.write('___')
-        view_method.draw_method()
-        view_method.draw_method_view()
+
+        if len(st.session_state.analysis_objects) == 0:
+            view_method.draw_method(0)
+            view_method.draw_method_view(0)
+        else:
+            for n in range(0, len(st.session_state.analysis_objects)):
+                view_method.draw_method(n)
+                view_method.draw_method_view(n)
+
+            ran = st.session_state.analysis_objects[str(len(st.session_state.analysis_objects)-1)]['analysis_code_ran']
+            if ran:
+                view_method.draw_method(len(st.session_state.analysis_objects))
+                view_method.draw_method_view(len(st.session_state.analysis_objects))
 
         view_data_info()
 

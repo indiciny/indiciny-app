@@ -63,7 +63,7 @@ def draw_load_state(directory, prefix, heading):
         states['name'] = states['name'].str.replace(prefix, '')
         top_row = pd.DataFrame({'name': '-'}, index=[0])
         states = pd.concat([top_row, states.loc[:]]).reset_index(drop=True)
-        state_selection = st.selectbox(heading, states)  # .name)
+        state_selection = st.selectbox(heading, states)
         if state_selection != '-':
             st.warning('Loading this state will overwrite your current selections! Do you want to continue?')
             overwrite = st.button('Continue')
@@ -73,7 +73,8 @@ def draw_load_state(directory, prefix, heading):
                 state_file = "state_" + st.session_state.uid + ".json"
                 session_state.save_persistent_state(True, state_file, st.session_state.uid)
         return states
-    except:
+    except Exception as e:
+        st.write(e)
         return pd.DataFrame()
 
 

@@ -147,7 +147,14 @@ def log_transaction(type):
         dc = ', '.join(do)
     else:
         dc = ''
-    values = (st.session_state.uid, type, dc, st.session_state.method_code)
+    ao = []
+    if st.session_state.analysis_objects:
+        for key, data in st.session_state.analysis_objects.items():
+            ao.append(data['analysis_code'])
+        ac = ', '.join(ao)
+    else:
+        ac = ''
+    values = (st.session_state.uid, type, dc, ac)
     cursor = dbc.cursor()
     cursor.execute(sql, values)
     dbc.commit()

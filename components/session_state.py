@@ -42,11 +42,12 @@ def reset_persistent_state():
     st.session_state['persistent_state'] = {
         "data_objects": {},
         "preprocessing_params": {},
-        "method_selection": "-",
-        "method_selection_expanded": True,
+        "analysis_objects": {},
+        #"method_selection": "-",
+        #"method_selection_expanded": True,
         "method_params": {},
-        "method_code": "",
-        "method_code_ran": False,
+        #"method_code": "",
+        #"method_code_ran": False,
         "user_changed_method_params": st.session_state['user_changed_method_params']
     }
     for key, value in st.session_state.persistent_state.items():
@@ -93,11 +94,12 @@ def reset_after_data_selection(index, selection):
         st.session_state['data'] = {}
         st.session_state.data_objects = {}
         st.session_state.preprocessing_params = {}
-        st.session_state.method_selection = "-"
-        st.session_state.method_selection_expanded = True
+        st.session_state.analysis_objects = {}
+        #st.session_state.method_selection = "-"
+        #st.session_state.method_selection_expanded = True
         st.session_state.method_params = {}
-        st.session_state.method_code = ""
-        st.session_state.method_code_ran = False
+        #st.session_state.method_code = ""
+        #st.session_state.method_code_ran = False
         st.session_state.user_changed_method_params = False
     st.session_state.data_objects[index] = {
         "data_selection": selection,
@@ -108,54 +110,14 @@ def reset_after_data_selection(index, selection):
     }
 
 
-
-def reset_after_data_selection3(index):
-    #reset_states()
-    st.write(index)
-
-        #st.session_state.data_objects[n] = {
-        #    "data_selection": "-",
-        #    "data_selection_expanded": True,
-        #    "data_params": {},
-        #    "data_code": "",
-        #    "data_code_ran": False
-        #}
-
-
-    st.session_state.persistent_state = {
-        "data_objects": st.session_state.data_objects,
-        "preprocessing_params": {},
-        "method_selection": "-",
-        "method_selection_expanded": True,
-        "method_params": {},
-        "method_code": "",
-        "method_code_ran": False,
-        "user_changed_method_params": False
+def reset_after_method_selection(index, selection):
+    st.session_state.analysis_objects[index] = {
+        "analysis_selection": selection,
+        "analysis_selection_expanded": True,
+        "analysis_params": {},
+        "analysis_code": "",
+        "analysis_code_ran": False
     }
-    for key, value in st.session_state.persistent_state.items():
-        if key != "data_objects":
-            st.session_state[key] = value
-
-
-
-def reset_after_method_selection():
-    st.session_state.persistent_state = {
-        "data_objects": st.session_state.data_objects,
-        "preprocessing_params": st.session_state.preprocessing_params,
-        "method_selection": st.session_state['method_selection'],
-        "method_selection_expanded": True,
-        "method_params": st.session_state['method_params'],
-        "method_code": "",
-        "method_code_ran": False,
-        "user_changed_method_params": False
-    }
-    persist = ["data_objects",
-               "preprocessing_params",
-               "method_selection",
-               "method_params"]
-    for key, value in st.session_state.persistent_state.items():
-        #if key not in persist:
-        st.session_state[key] = value
 
 
 def load_persistent_state(state_name, directory):
@@ -199,11 +161,12 @@ def save_persistent_state(force, state_name, directory):
     st.session_state.persistent_state = {
         "data_objects": st.session_state.data_objects,
         "preprocessing_params": st.session_state.preprocessing_params,
-        "method_selection": st.session_state.method_selection,
-        "method_selection_expanded": st.session_state.method_selection_expanded,
+        "analysis_objects": st.session_state.analysis_objects,
+        #"method_selection": st.session_state.method_selection,
+        #"method_selection_expanded": st.session_state.method_selection_expanded,
         "method_params": st.session_state.method_params,
-        "method_code": st.session_state.method_code,
-        "method_code_ran": st.session_state.method_code_ran,
+        #"method_code": st.session_state.method_code,
+        #"method_code_ran": st.session_state.method_code_ran,
         "user_changed_method_params": st.session_state.user_changed_method_params
     }
 
