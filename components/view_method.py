@@ -2,7 +2,7 @@ import streamlit as st
 import json
 from . import data_handler
 from . import session_state
-
+import pandas as pd
 
 ttl_value = 600
 
@@ -29,7 +29,15 @@ def load_method(meta, analysis_index):
 
 
 def filter_methods(category):
-    return st.session_state.method_meta
+    new_dict = {}
+    #st.write(st.session_state.method_meta)
+    for key, value in st.session_state.method_meta.items():
+        if 'type' in value:
+            if value['type'] == category:
+                new_dict[key] = value
+            #st.write(value)
+    #st.write(st.session_state.method_meta)
+    return new_dict
 
 
 
@@ -39,13 +47,22 @@ def draw_method(analysis_index):
         st.write("## Analysis")
     #else:
     #    st.write("**Data source "+str(data_index+1)+"**")
-    meta = st.session_state.method_meta
+    if 'data_type' in st.session_state:
+        meta = filter_methods(st.session_state.data_type)
+    else:
+        meta = st.session_state.method_meta
+    top_row = {'-': {}}
+    meta = {**top_row, **meta}
     analysis_index = str(analysis_index)
 
     if analysis_index in st.session_state.analysis_objects:
         if st.session_state.analysis_objects[analysis_index]['analysis_selection'] != "-":
-            idx = (list(meta.keys())).index(st.session_state.analysis_objects[analysis_index]['analysis_selection'])
-            analysis_indexed = True
+            try:
+                idx = (list(meta.keys())).index(st.session_state.analysis_objects[analysis_index]['analysis_selection'])
+                analysis_indexed = True
+            except:
+                idx = 0
+                analysis_indexed = False
         else:
             idx = 0
             analysis_indexed = False

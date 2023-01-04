@@ -349,8 +349,12 @@ def draw_column_manipulation():
 def draw_preprocessing():
     st.write('---')
     st.write("### Preprocessing")
-    add_secondary_data()
-    draw_column_manipulation()
-    draw_data_filter()
+    cat = st.session_state.data_type
+    if cat == 'dataframe':
+        add_secondary_data()
+        draw_column_manipulation()
+        draw_data_filter()
+    elif cat == 'text':
+        st.write("split and stuff, punctuation...")
 
 

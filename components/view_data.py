@@ -20,6 +20,8 @@ def load_data(meta, data_index):
     st.session_state.data_objects[data_index]['data_code'] = "data/" + meta['data_location']
     st.session_state.data_objects[data_index]['data_selection_expanded'] = False
     st.session_state.data_objects[data_index]['data_code_ran'] = True
+    st.session_state.data_objects[data_index]['data_type'] = meta['type']
+
 
 
 def draw_source(data_index):
@@ -79,6 +81,8 @@ def draw_source_view(data_index):
     if data_index in st.session_state.data_objects:
 
         if st.session_state.data_objects[data_index]['data_code_ran']:
+            st.session_state['data_type'] = st.session_state.data_objects[data_index]['data_type']
+
             #prerunparams = st.session_state.data_params.copy()
             check_data_change = False
             if data_index in st.session_state.returned_data:
@@ -101,6 +105,7 @@ def draw_source_view(data_index):
 
                 #session_state.set_session_state('data', st.session_state.returned_data[data_index])
                 st.session_state.original_data[data_index] = st.session_state.returned_data[data_index]
+
                 #session_state.set_session_state('original_data', st.session_state.returned_data[data_index])
                 #st.session_state
                 #session_state.set_session_state('data_selection_expanded', False)
