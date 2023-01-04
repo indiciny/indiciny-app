@@ -36,7 +36,7 @@ def filter_methods(category):
 def draw_method(analysis_index):
 
     if analysis_index == 0:
-        st.write("# Analysis")
+        st.write("## Analysis")
     #else:
     #    st.write("**Data source "+str(data_index+1)+"**")
     meta = st.session_state.method_meta

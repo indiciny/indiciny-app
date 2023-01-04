@@ -116,7 +116,7 @@ def init_app():
 
 
     if st.session_state.authorized:
-        view_session_state()
+
 
         view_sidebar.draw_sidebar()
 
@@ -132,7 +132,7 @@ def init_app():
             sv_container = st.container()
             with sv_container:
                 st.write('---')
-                st.write("## Data preview")
+                st.write("### Data preview")
                 st.dataframe(st.session_state.data['final'])
             #view_preprocessing.draw_preprocessing()
 
@@ -153,6 +153,7 @@ def init_app():
                 view_method.draw_method_view(len(st.session_state.analysis_objects))
 
         view_data_info()
+        view_session_state()
 
         #view_sidebar.draw_counter()
         #view_sidebar.draw_data_ops()

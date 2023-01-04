@@ -24,7 +24,7 @@ def load_data(meta, data_index):
 
 def draw_source(data_index):
     if data_index == 0:
-        st.write("# Data selection")
+        st.write("## Data selection")
     #else:
     #    st.write("**Data source "+str(data_index+1)+"**")
     meta = st.session_state.data_meta
