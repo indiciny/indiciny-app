@@ -110,15 +110,7 @@ def init_app():
                     st.session_state.authorized = True
                     data_handler.log_transaction('login')
 
-    if 'only_once' not in st.session_state:
-        st.session_state.only_once = True
-        st.session_state.userlogin = 'jungiroman@gmail.com'
-        initiate_states()
-        st.session_state.uid = str(user_id_affinity(st.session_state.userlogin))
-        state_file = "state_" + st.session_state.uid + ".json"
-        session_state.load_persistent_state(state_file, st.session_state.uid)
-        st.session_state.authorized = True
-        data_handler.log_transaction('login')
+
 
 
     if st.session_state.authorized:
