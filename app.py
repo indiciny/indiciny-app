@@ -10,7 +10,6 @@ import time
 import pandas as pd
 import sys
 
-
 def initiate_states():
     st.session_state['data'] = {}
     st.session_state['original_data'] = {}
@@ -135,6 +134,9 @@ def init_app():
                 st.write("### Data preview")
                 st.dataframe(st.session_state.data['final'])
             #view_preprocessing.draw_preprocessing()
+        elif 'final' in st.session_state.data:
+            st.session_state.data.pop('final')
+            st.session_state.analysis_objects = {}
 
 
         st.write('___')
