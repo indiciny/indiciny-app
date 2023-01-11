@@ -251,6 +251,7 @@ def add_column():
             operators = ['+', '-', '*', '/']
 
             for key, value in st.session_state.preprocessing_params[group].items():
+                col1, col2, col3, col4, col5, col6 = st.columns([3, 1, 3, 1, 3, 1])
                 new_columns[str(col_ind)] = {}
                 new_columns[str(col_ind)]['name'] = col1.text_input('input name',
                                                                     label_visibility='collapsed',
