@@ -3,3 +3,4 @@ plotly
 wbdata
 wikipedia
 transformers==4.25.1
+wordcloud
