@@ -8,8 +8,9 @@ import re
 import sys
 import numpy as np
 from wordcloud import STOPWORDS
-from textblob import Word
-from nltk.stem import WordNetLemmatizer
+#from textblob import Word
+#from pattern3.en import lemma
+
 
 
 def update_data_filter(filters):
@@ -381,43 +382,54 @@ def preprocess_text():
     with st.form('prep'):
         if st.checkbox('Convert to lower case', value=options['lowercase']):
             options['lowercase'] = True
-            df['Text'] = df['Text'].apply(lambda x: " ".join(x.lower() for x in x.split()))
         else:
             options['lowercase'] = False
 
         if st.checkbox('Remove punctuation', value=options['remove_punctuation']):
             options['remove_punctuation'] = True
-            df['Text'] = df['Text'].str.replace('[^\w\s]', '')
         else:
             options['remove_punctuation'] = False
 
         if st.checkbox('Remove stopwords', value=options['remove_stopwords']):
             options['remove_stopwords'] = True
-            df['Text'] = df['Text'].apply(lambda x: " ".join(x for x in x.split() if x not in STOPWORDS))
         else:
             options['remove_stopwords'] = False
 
         if st.checkbox('Remove rare words (only one appearance)', value=options['remove_rare']):
             options['remove_rare'] = True
-            freq = pd.Series(' '.join(df['Text']).split()).value_counts()
-            less_freq = list(freq[freq == 1].index)
-            df['Text'] = df['Text'].apply(lambda x: " ".join(x for x in x.split() if x not in less_freq))
+
         else:
             options['remove_rare'] = False
-        df['Text'].replace('', np.nan, inplace=True)
-        df.dropna(subset=['Text'], inplace=True)
-        if st.checkbox('Lemmatize', value=options['lemmatize']):
-            lemmatizer = WordNetLemmatizer()
-            options['lemmatize'] = True
-            df['Text'] = df['Text'].apply(lambda x: " ".join([lemmatizer.lemmatize(word) for word in x.split()]))
+
+        #if st.checkbox('Lemmatize', value=options['lemmatize']):
+            #options['lemmatize'] = True
             #df['Text'] = df['Text'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
-        else:
-            options['lemmatize'] = False
+        #else:
+            #options['lemmatize'] = False
 
 
 
         btn_prep = st.form_submit_button('Update')
     if btn_prep:
-        st.session_state.data['final'] = df.copy()
+        #st.session_state.data['final'] = df.copy()
         st.session_state.preprocessing_params[group] = options
 
+    st.session_state.data['final'] = prep(df, st.session_state.preprocessing_params[group])
+
+
+def prep(df, options):
+    if options['lowercase']:
+        df['Text'] = df['Text'].apply(lambda x: " ".join(x.lower() for x in x.split()))
+    if options['remove_punctuation']:
+        df['Text'] = df['Text'].str.replace('[^\w\s]', '')
+    if options['remove_stopwords']:
+        df['Text'] = df['Text'].apply(lambda x: " ".join(x for x in x.split() if x not in STOPWORDS))
+    if options['remove_rare']:
+        freq = pd.Series(' '.join(df['Text']).split()).value_counts()
+        less_freq = list(freq[freq == 1].index)
+        df['Text'] = df['Text'].apply(lambda x: " ".join(x for x in x.split() if x not in less_freq))
+
+    df['Text'].replace('', np.nan, inplace=True)
+    df.dropna(subset=['Text'], inplace=True)
+
+    return df
