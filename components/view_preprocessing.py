@@ -9,6 +9,7 @@ import sys
 import numpy as np
 from wordcloud import STOPWORDS
 from textblob import Word
+from nltk.stem import WordNetLemmatizer
 
 
 def update_data_filter(filters):
@@ -406,8 +407,10 @@ def preprocess_text():
         df['Text'].replace('', np.nan, inplace=True)
         df.dropna(subset=['Text'], inplace=True)
         if st.checkbox('Lemmatize', value=options['lemmatize']):
+            lemmatizer = WordNetLemmatizer()
             options['lemmatize'] = True
-            df['Text'] = df['Text'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
+            df['Text'] = df['Text'].apply(lambda x: " ".join([lemmatizer.lemmatize(word) for word in x.split()]))
+            #df['Text'] = df['Text'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
         else:
             options['lemmatize'] = False
 
