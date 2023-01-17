@@ -7,6 +7,8 @@ from pandas.api.types import is_numeric_dtype
 import re
 import sys
 import numpy as np
+from wordcloud import STOPWORDS
+from textblob import Word
 
 
 def update_data_filter(filters):
@@ -237,7 +239,7 @@ def add_column():
     with add_column_container.container():
         with st.form('add_column'):
 
-            col1, col2, col3, col4, col5, col6 = st.columns([3,1,3,1,3,1])
+            col1, col2, col3, col4, col5, col6 = st.columns([3,1,3,1,3,2])
             col1.write("New column name")
             col2.write('')
             col2.write('')
@@ -251,7 +253,7 @@ def add_column():
             operators = ['+', '-', '*', '/']
 
             for key, value in st.session_state.preprocessing_params[group].items():
-                col1, col2, col3, col4, col5, col6 = st.columns([3, 1, 3, 1, 3, 1])
+                col1, col2, col3, col4, col5, col6 = st.columns([3, 1, 3, 1, 3, 2])
                 new_columns[str(col_ind)] = {}
                 new_columns[str(col_ind)]['name'] = col1.text_input('input name',
                                                                     label_visibility='collapsed',
@@ -281,13 +283,14 @@ def add_column():
                                                                     label_visibility="collapsed",
                                                                     key="scol" + str(col_ind))
 
-                new_columns[str(col_ind)]['delete'] = col6.checkbox('delete',
+                new_columns[str(col_ind)]['delete'] = col6.checkbox('Delete',
                                                                     value=value['delete'],
-                                                                    label_visibility="collapsed",
+                                                                    #label_visibility="collapsed",
                                                                     key="cbxdel" + str(col_ind))
                 col6.write('')
                 col_ind = col_ind + 1
 
+            col1, col2, col3, col4, col5, col6 = st.columns([3, 1, 3, 1, 3, 2])
             new_columns[str(col_ind)] = {}
             new_columns[str(col_ind)]['name'] = col1.text_input('input name', label_visibility='collapsed', placeholder='Enter new column name', key="inam" + str(col_ind))
             col2.write('')
@@ -316,7 +319,7 @@ def add_column():
                                                                  key="scol" + str(col_ind))
 
             #col6.write("")
-            new_columns[str(col_ind)]['delete'] = col6.checkbox('delete', label_visibility="collapsed", key="cbxdel" + str(col_ind))
+            new_columns[str(col_ind)]['delete'] = col6.checkbox('Delete', key="cbxdel" + str(col_ind))
 
             btn_add_column = st.form_submit_button('Add columns')
         if btn_add_column:
@@ -357,5 +360,60 @@ def draw_preprocessing():
         draw_data_filter()
     elif cat == 'text':
         st.write("split and stuff, punctuation...")
+        preprocess_text()
 
+
+def preprocess_text():
+    group = 'text_processing'
+    if group not in st.session_state.preprocessing_params:
+        st.session_state.preprocessing_params[group] = {
+            'lowercase': True,
+            'remove_punctuation': True,
+            'remove_stopwords': True,
+            'remove_rare': True,
+            'lemmatize': True
+        }
+        options = st.session_state.preprocessing_params[group]
+    else:
+        options = st.session_state.preprocessing_params[group]
+    df = st.session_state.data['final'].copy()
+    with st.form('prep'):
+        if st.checkbox('Convert to lower case', value=options['lowercase']):
+            options['lowercase'] = True
+            df['Text'] = df['Text'].apply(lambda x: " ".join(x.lower() for x in x.split()))
+        else:
+            options['lowercase'] = False
+
+        if st.checkbox('Remove punctuation', value=options['remove_punctuation']):
+            options['remove_punctuation'] = True
+            df['Text'] = df['Text'].str.replace('[^\w\s]', '')
+        else:
+            options['remove_punctuation'] = False
+
+        if st.checkbox('Remove stopwords', value=options['remove_stopwords']):
+            options['remove_stopwords'] = True
+            df['Text'] = df['Text'].apply(lambda x: " ".join(x for x in x.split() if x not in STOPWORDS))
+        else:
+            options['remove_stopwords'] = False
+
+        if st.checkbox('Remove rare words (only one appearance)', value=options['remove_rare']):
+            options['remove_rare'] = True
+            freq = pd.Series(' '.join(df['Text']).split()).value_counts()
+            less_freq = list(freq[freq == 1].index)
+            df['Text'] = df['Text'].apply(lambda x: " ".join(x for x in x.split() if x not in less_freq))
+        else:
+            options['remove_rare'] = False
+
+        if st.checkbox('Lemmatize', value=options['lemmatize']):
+            options['lemmatize'] = True
+            df['Text'] = df['Text'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
+        else:
+            options['lemmatize'] = False
+
+
+
+        btn_prep = st.form_submit_button('Update')
+    if btn_prep:
+        st.session_state.data['final'] = df.copy()
+        st.session_state.preprocessing_params[group] = options
 
