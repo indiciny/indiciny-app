@@ -403,7 +403,8 @@ def preprocess_text():
             df['Text'] = df['Text'].apply(lambda x: " ".join(x for x in x.split() if x not in less_freq))
         else:
             options['remove_rare'] = False
-
+        df['Text'].replace('', np.nan, inplace=True)
+        df.dropna(subset=['Text'], inplace=True)
         if st.checkbox('Lemmatize', value=options['lemmatize']):
             options['lemmatize'] = True
             df['Text'] = df['Text'].apply(lambda x: " ".join([Word(word).lemmatize() for word in x.split()]))
